@@ -1,0 +1,2525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>观鸟俱乐部 · 松江印象</title>
+<meta name="description" content="在上海松江辨认冬鸟、拜访六处景观，收集你的第一份观鸟手记。海兔与 Ethan8 的策略卡牌游戏。">
+<style>
+  :root{
+    --bg1:#dff0ee; --bg2:#eaf3e4; --bg3:#d2e6ec;
+    --ink:#1e3023; --muted:#5c7261;
+    --paper:rgba(255,253,247,.93); --paper-solid:#fffdf7;
+    --line:#c6d7be; --gold:#e2b042; --accent:#2e6f4e; --lake:#31747e;
+    --shadow:0 4px 16px rgba(26,52,38,.09), 0 1px 3px rgba(26,52,38,.06);
+    --shadow-lg:0 14px 36px rgba(20,44,32,.18);
+  }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  body{
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+    color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(ellipse 68% 44% at 84% 8%, rgba(255,241,196,.72), transparent 72%),
+      radial-gradient(ellipse 55% 40% at 15% 18%, rgba(212,240,236,.65), transparent 70%),
+      linear-gradient(168deg, #dceef2 0%, #eaf3e6 42%, #d5e8e3 76%, #c7dfe0 100%);
+    background-attachment:fixed;
+  }
+
+  /* 清晨湖畔氛围背景（纯装饰，不挡操作） */
+  .lake-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .lake-bg svg{position:absolute;left:0;bottom:0;width:100%;height:34vh;min-height:190px;max-height:320px;opacity:.42}
+  .lake-mist{position:absolute;inset:auto -10% 14vh -10%;height:90px;
+    background:radial-gradient(ellipse at center,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 72%);
+    filter:blur(12px);animation:mistDrift 22s ease-in-out infinite alternate}
+  .lake-birds{position:absolute;top:54px;right:7%;width:150px;height:60px;opacity:.34;animation:birdGlide 28s ease-in-out infinite alternate}
+  @keyframes mistDrift{from{transform:translateX(-3%) scaleY(1)}to{transform:translateX(3%) scaleY(1.08)}}
+  @keyframes birdGlide{from{transform:translate(0,0)}to{transform:translate(-34px,-8px)}}
+
+  .wrap{max-width:1320px;margin:0 auto;padding:10px 14px 86px;position:relative;z-index:1}
+
+  /* 顶部手账标题栏 */
+  header.top{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    padding:9px 14px;margin-bottom:8px;
+    background:rgba(255,253,246,.82);backdrop-filter:blur(10px);
+    border:1px solid rgba(198,215,190,.85);border-radius:16px;box-shadow:var(--shadow);
+  }
+  header.top h1{font-size:20px;margin:0;display:flex;align-items:center;gap:7px;letter-spacing:.3px;color:#1d4430}
+  header.top h1 .sub{font-size:11px;color:var(--lake);font-weight:600;background:#e6f3f1;border:1px solid #c2dfdb;
+    padding:2px 8px;border-radius:99px;letter-spacing:.2px}
+  .spacer{flex:1}
+
+  button{
+    font-family:inherit;cursor:pointer;border:none;border-radius:10px;padding:7px 13px;font-size:13.5px;font-weight:600;
+    background:linear-gradient(135deg,#2f7350,#3d8a60);color:#fff;box-shadow:0 2px 8px rgba(32,78,52,.2);
+    transition:transform .12s ease, filter .15s ease, box-shadow .15s ease;
+  }
+  button:hover{filter:brightness(1.06);box-shadow:0 4px 12px rgba(32,78,52,.26)}
+  button:active{transform:translateY(1px) scale(.99)}
+  button.ghost{background:rgba(255,255,255,.92);color:var(--ink);border:1px solid var(--line);box-shadow:0 1px 4px rgba(26,52,38,.06)}
+  button.ghost:hover{background:#f5faf4;border-color:#a8c1a0}
+  button.gold{background:linear-gradient(135deg,#e8ba4b,#d9a332);color:#3a2700;box-shadow:0 2px 8px rgba(180,128,20,.22)}
+  button.bgm-on{background:linear-gradient(135deg,#e7f5ef,#d9eee8);color:#1d5c4c;border-color:#97c7ba;position:relative}
+  button.bgm-on::after{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#2da47a;
+    margin-left:5px;vertical-align:middle;animation:bgmPulse 2.2s ease-in-out infinite}
+  @keyframes bgmPulse{0%,100%{opacity:.45;transform:scale(.9)}50%{opacity:1;transform:scale(1.25)}}
+  button:disabled{opacity:.42;cursor:not-allowed;filter:none;transform:none}
+  button.big{font-size:14.5px;padding:10px 18px;border-radius:11px}
+  button.sm{font-size:12px;padding:5px 10px;border-radius:8px}
+
+  .goalbar{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    background:linear-gradient(105deg,#23533c 0%,#2f6f52 55%,#34797d 100%);
+    color:#fff;border-radius:14px;padding:9px 15px;margin:7px 0;box-shadow:var(--shadow);
+    border:1px solid rgba(255,255,255,.18);
+  }
+  .goalbar b{font-size:14.5px;letter-spacing:.2px} .goalbar .mini{font-size:12px;opacity:.92}
+  .goalbar .prog{flex:1;min-width:120px;height:10px;background:rgba(255,255,255,.22);border-radius:99px;overflow:hidden;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.2)}
+  .goalbar .prog i{display:block;height:100%;background:linear-gradient(90deg,#f5d06e,#e8ae38);border-radius:99px;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+
+  .roundhud{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--paper);backdrop-filter:blur(8px);
+    border:1px solid var(--line);border-radius:13px;padding:7px 13px;margin:7px 0;box-shadow:var(--shadow);font-size:13px;
+  }
+  .roundhud .rnd{font-weight:800;color:var(--accent);white-space:nowrap}
+  .roundhud .stage{display:flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;background:#ebf2e7;color:var(--muted);white-space:nowrap;font-size:12px;font-weight:600}
+  .roundhud .stage.on{background:linear-gradient(135deg,#2e6f4e,#3c8560);color:#fff;font-weight:700;box-shadow:0 2px 6px rgba(46,111,78,.22)}
+  .roundhud .seat{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:99px;background:#fff;
+    border:1px solid var(--line);font-size:12px;white-space:nowrap}
+  .roundhud .seat.now{border-color:var(--gold);background:#fef6df;font-weight:700;animation:seatpulse 1.6s infinite}
+  @keyframes seatpulse{0%,100%{box-shadow:0 0 0 0 rgba(226,176,66,0)}50%{box-shadow:0 0 0 4px rgba(226,176,66,.38)}}
+
+  .scoreboard{display:flex;gap:9px;flex-wrap:wrap;margin:7px 0}
+  .pchip{
+    background:var(--paper);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:14px;
+    padding:8px 13px;min-width:162px;flex:1 1 175px;box-shadow:var(--shadow);transition:transform .15s,border-color .15s;
+  }
+  .pchip.active{border-color:var(--gold);outline:2px solid rgba(226,176,66,.65);background:#fffef8;transform:translateY(-1px)}
+  .pchip .nm{font-weight:700;display:flex;align-items:center;gap:5px;font-size:13px}
+  .pchip .sc{font-size:25px;font-weight:800;line-height:1.1;color:#1d4430;margin:2px 0}
+  .pchip .det{font-size:11px;color:var(--muted);line-height:1.4}
+  .tag{display:inline-block;font-size:10px;background:#e8f3ea;border:1px solid #c3dbc8;color:#276342;border-radius:99px;padding:0 6px;margin-left:3px;font-weight:700}
+  .tag.cpu{background:#e7eff6;border-color:#c6d9ea;color:#2f597a}
+
+  .panel{
+    background:var(--paper);backdrop-filter:blur(8px);border:1px solid var(--line);
+    border-radius:16px;padding:13px 14px;margin-bottom:11px;box-shadow:var(--shadow);
+  }
+  .panel h2{font-size:13.5px;margin:0 0 9px;color:#1f583d;letter-spacing:.4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .row{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-start}
+  .lab{font-size:11.5px;color:var(--muted);margin:0 0 5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .filterbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .pillbtn{font-size:11px;padding:3px 9px;border-radius:99px;background:#eef4ec;color:#35563e;border:1px solid #c8d8c4;box-shadow:none;font-weight:600}
+  .pillbtn.on{background:#2e6f4e;color:#fff;border-color:#2e6f4e}
+
+  /* ---------- 鸟类卡（带水彩生态插画） ---------- */
+  .card{
+    width:88px;border-radius:12px;background:#fff;border:1px solid #c9d8c3;box-shadow:0 3px 10px rgba(28,54,38,.11);
+    overflow:hidden;position:relative;user-select:none;transition:transform .16s cubic-bezier(.34,1.3,.6,1), box-shadow .16s ease, opacity .15s;
+  }
+  .card .art{height:56px;display:flex;align-items:center;justify-content:center;background:#eff6ee;overflow:hidden}
+  .card .art svg{width:100%;height:100%;display:block}
+  .card .nm{font-size:11.5px;font-weight:800;text-align:center;padding:3px 3px 2px;line-height:1.15;color:#1d3323;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card .habs{display:flex;justify-content:center;gap:3px;padding:0 3px 4px}
+  .hdot{padding:1px 5px;border-radius:4px;border:1px solid rgba(0,0,0,.12);font-size:8.5px;font-weight:700;color:#16331e;line-height:1.25}
+  .card .catpill{position:absolute;top:3px;left:3px;font-size:9px;font-weight:700;background:rgba(28,53,37,.84);
+    color:#f6faf4;border-radius:5px;padding:1px 5px;backdrop-filter:blur(2px)}
+  .card.mini{width:58px;border-radius:9px}
+  .card.mini .art{height:38px}
+  .card.mini .nm{font-size:9.5px;padding:2px 2px 3px}
+  .card.mini .habs{display:none}
+  .card.mini .catpill{font-size:7.5px;padding:0 3px;top:2px;left:2px}
+  .card.clk{cursor:pointer}
+  .card.clk:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(24,52,36,.22)}
+  .card.legal{outline:3px solid #40995c;outline-offset:1px;box-shadow:0 0 0 4px rgba(64,153,92,.14)}
+  .card.sel{outline:3px solid var(--gold);outline-offset:1px;transform:translateY(-5px);box-shadow:0 8px 18px rgba(206,152,34,.35)}
+  .card.dim{opacity:.34;filter:grayscale(.45)}
+  .card.back{background:repeating-linear-gradient(45deg,#4f6b56,#4f6b56 6px,#46604d 6px,#46604d 12px);color:#e8f4ea}
+  .card.back .art{background:transparent;font-size:22px}
+
+  /* ---------- 景观卡 ---------- */
+  .lcard{
+    width:64px;height:82px;border-radius:11px;color:#13321d;position:relative;box-shadow:0 3px 10px rgba(26,52,38,.12);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px solid rgba(255,255,255,.55);
+    user-select:none;transition:transform .16s cubic-bezier(.34,1.3,.6,1), box-shadow .16s ease;
+  }
+  .lcard::after{content:'';position:absolute;inset:3px;border:1px solid rgba(255,255,255,.35);border-radius:8px;pointer-events:none}
+  .lcard .ic{font-size:21px;line-height:1.1} .lcard .ln{font-weight:800;font-size:12px;margin-top:2px}
+  .lcard .gp{font-size:9.5px;font-weight:700;background:rgba(20,42,28,.45);color:#fff;border-radius:99px;padding:0 6px;margin-top:3px}
+  .lcard.clk{cursor:pointer} .lcard.clk:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(24,52,36,.2)}
+  .lcard.legal{outline:3px solid #2e7d47;outline-offset:2px}
+  .lcard.sel{outline:3px solid var(--gold);outline-offset:2px;transform:translateY(-4px)}
+  .lcard .cnt{position:absolute;top:-7px;right:-7px;background:#233b2a;color:#fff;border-radius:50%;width:21px;height:21px;
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:1.5px solid #fff;z-index:2}
+
+  /* ---------- 图鉴卡 ---------- */
+  .gcard{
+    width:120px;border-radius:11px;border:1px solid #dcc89b;
+    background:linear-gradient(165deg,#fffaf0,#fcefd4);
+    box-shadow:0 3px 9px rgba(60,48,20,.1);padding:6px 7px 23px;position:relative;user-select:none;
+    transition:transform .16s cubic-bezier(.34,1.3,.6,1), box-shadow .16s ease, opacity .18s ease;
+  }
+  .gcard.lv2{border-color:#b5cde0;background:linear-gradient(165deg,#f5faff,#dfeefc)}
+  .gcard .gh{font-weight:800;font-size:11.5px;display:flex;justify-content:space-between;align-items:center;gap:3px;color:#273b2c}
+  .gcard .pts{background:linear-gradient(135deg,#ecc254,#d89d28);color:#3a2700;border-radius:99px;padding:0 6px;font-weight:800;font-size:10.5px}
+  .gcard .req{font-size:10px;line-height:1.35;color:#5d4f32;margin-top:4px;font-weight:600}
+  .gcard .keep{font-size:9px;color:#2e6f4e;margin-top:3px;font-weight:600}
+  .gcard.clk{cursor:pointer} .gcard.clk:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(24,52,36,.2)}
+  .gcard.legal{outline:3px solid #40995c;outline-offset:1px;box-shadow:0 0 0 4px rgba(64,153,92,.16)}
+  .gcard.dim{opacity:.38}
+  .gcard.gmuted{opacity:.24;filter:grayscale(.45)}
+  .gcard .gprog{position:absolute;left:4px;right:4px;bottom:4px;font-size:10px;font-weight:700;text-align:center;
+    border-radius:7px;padding:1px 4px;background:rgba(36,54,40,.82);color:#ffebb9;line-height:1.3}
+  .gcard .gprog.ok{background:rgba(40,115,62,.95);color:#ecffec}
+  .gcard .gprog.near{background:rgba(191,126,22,.94);color:#fff}
+  .gpool{display:flex;gap:7px;flex-wrap:wrap}
+
+  /* ---------- 鸟类群落 ---------- */
+  .groups{display:flex;gap:11px;flex-wrap:wrap}
+  .group{border:2px dashed #c0d2ba;border-radius:15px;padding:8px 10px;background:rgba(251,253,248,.88);position:relative;min-width:162px;transition:border-color .15s, background .15s}
+  .group.metgd{border-color:#4b9a62;background:#f0faf1}
+  .group.sel{border-color:var(--gold);border-style:solid;background:#fff9e8}
+  .group .ghd{font-size:11px;color:var(--muted);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+  .group .ghd b{color:var(--accent);font-size:12px}
+  .habs2{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+  .hab{display:flex;gap:5px;align-items:flex-start;padding:5px;border-radius:10px;background:rgba(255,255,255,.78);border:1px solid rgba(198,215,190,.55)}
+  .hab.closed{opacity:.62}
+  .hab .bslots{display:flex;gap:4px;align-items:center}
+  .slot{width:56px;height:74px;border:1.5px dashed #bfd0b6;border-radius:9px;display:flex;align-items:center;
+    justify-content:center;color:#93a68c;font-size:10.5px;text-align:center;line-height:1.25;font-weight:600}
+  .slot.clk{cursor:pointer;border-color:#44965c;color:#2f7545;background:#eef9ee}
+  .slot.clk:hover{background:#e1f3e2}
+  .addhab{width:58px;height:82px;border:2px dashed #b4c7ad;border-radius:10px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;color:#7e9378;font-size:10.5px;cursor:default;line-height:1.3;text-align:center;font-weight:600}
+  .addhab.clk{cursor:pointer;border-color:#44965c;color:#2f7545;background:#eef9ee}
+  .newgroup{border:2px dashed #b4c7ad;border-radius:15px;padding:12px 15px;min-width:124px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;color:#7e9378;font-size:11.5px;text-align:center;line-height:1.45;font-weight:600}
+  .newgroup.clk{cursor:pointer;border-color:#44965c;color:#2f7545;background:#eef9ee}
+
+  .achcard{width:148px;border-radius:11px;background:linear-gradient(145deg,#fff8e7,#fdebc9);border:1px solid #e1b85b;
+    padding:7px 9px;box-shadow:0 3px 8px rgba(100,72,18,.1);position:relative;user-select:none;transition:transform .14s}
+  .achcard.taken{opacity:.36;filter:grayscale(.6)}
+  .achcard.legal{outline:3px solid #40995c;outline-offset:1px;cursor:pointer;transform:translateY(-2px)}
+  .achcard .id{font-weight:800;color:#8e6000;font-size:12.5px}
+  .achcard .tx{font-size:10.5px;color:#624d24;margin-top:3px;line-height:1.35}
+  .achcard .p{position:absolute;top:6px;right:7px;background:var(--gold);color:#3a2700;border-radius:99px;padding:0 6px;font-weight:800;font-size:10.5px}
+
+  .actionbar{
+    position:sticky;bottom:8px;background:rgba(255,253,247,.96);backdrop-filter:blur(10px);
+    border:1px solid #b9ceb2;border-radius:16px;padding:12px 15px;box-shadow:0 -2px 20px rgba(26,52,38,.14);margin-top:10px;z-index:20;
+  }
+  .actionbar .prompt{font-size:14.5px;font-weight:700;margin-bottom:8px;min-height:20px;color:#1d3926;line-height:1.45}
+  .actionbar .btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.45}
+  .step{display:inline-block;font-size:11px;background:#eaf1e6;border:1px solid var(--line);border-radius:99px;padding:2px 10px;margin-right:6px;font-weight:600}
+  .step.done{background:#dcf0dc;color:#2c6f42;border-color:#b2d7b9}
+  .step.now{background:linear-gradient(135deg,#ecc254,#dfaa37);color:#3a2700;font-weight:800;border-color:#d49e2a}
+
+  .log{max-height:140px;overflow:auto;font-size:11.5px;line-height:1.55;color:#3d4f40;background:#f4f8f1;border-radius:11px;padding:8px 10px;border:1px solid #dfeadb}
+  .log div{padding:2px 0;border-bottom:1px solid #e7efe4}
+  .opp{flex:1;min-width:215px;background:rgba(251,253,248,.92);border:1px solid var(--line);border-radius:13px;padding:9px 11px;font-size:11.5px}
+  .opp .on{font-weight:800;font-size:12.5px;color:#1f4830}
+  .opp .gsum{color:#536655;margin-top:3px;line-height:1.5}
+
+  .overlay{position:fixed;inset:0;background:rgba(20,38,28,.54);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:50;padding:14px}
+  .modal{background:var(--paper-solid);border:1px solid var(--line);border-radius:20px;padding:22px;max-width:620px;width:100%;box-shadow:var(--shadow-lg);max-height:90vh;overflow:auto}
+  .modal h2{margin-top:0;color:#1e563a}
+  .setrow{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}
+  .setrow input[type=text]{flex:1;min-width:90px;padding:7px 10px;border:1px solid var(--line);border-radius:9px;font-family:inherit}
+  .setrow select{padding:7px 9px;border:1px solid var(--line);border-radius:9px;font-family:inherit;background:#fff}
+  .winrow{display:flex;justify-content:space-between;padding:8px 12px;border-radius:10px;margin:5px 0;background:#f2f7ef}
+  .winrow.first{background:linear-gradient(135deg,#fff3cf,#ffe59e);font-weight:800;border:1px solid #e7c060}
+  .rules{font-size:13px;line-height:1.68}.rules h3{color:var(--accent);margin:13px 0 4px;font-size:14px}
+  .note{font-size:11.5px;background:#fff7e2;border:1px solid #e5bd5a;border-radius:10px;padding:8px 11px;line-height:1.52;color:#664e21}
+
+  /* ===== 沉浸体验：阶段横幅 / 区域聚光 / 飞牌 / 望远镜观鸟 / 悬浮放大 ===== */
+  .phasebanner{position:fixed;left:50%;top:32%;transform:translate(-50%,-50%) scale(.82);z-index:9600;pointer-events:none;
+    background:linear-gradient(135deg,#22543d,#347a57);color:#fff;padding:16px 32px;border-radius:18px;
+    box-shadow:0 18px 48px rgba(10,32,20,.4);font-size:22px;font-weight:800;letter-spacing:.05em;opacity:0;
+    animation:pbAnim 1.45s cubic-bezier(.2,.9,.3,1) forwards;text-align:center;border:1px solid rgba(255,255,255,.22)}
+  .phasebanner .sub{display:block;font-size:13px;font-weight:400;opacity:.92;margin-top:4px;letter-spacing:.02em}
+  .phasebanner.ob{background:linear-gradient(135deg,#235166,#33758a)}
+  @keyframes pbAnim{0%{opacity:0;transform:translate(-50%,-50%) scale(.82)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.03)}24%{transform:translate(-50%,-50%) scale(1)}82%{opacity:1}100%{opacity:0;transform:translate(-50%,-56%) scale(1)}}
+
+  .zone-hot{outline:3px solid rgba(226,176,66,.92);outline-offset:4px;border-radius:13px;animation:zonepulse 1.7s infinite}
+  @keyframes zonepulse{0%,100%{box-shadow:0 0 0 0 rgba(226,176,66,0)}50%{box-shadow:0 0 0 8px rgba(226,176,66,.26)}}
+
+  .flycard{position:fixed;z-index:9999;pointer-events:none;filter:drop-shadow(0 12px 22px rgba(18,42,26,.36));will-change:left,top,transform}
+  .obs-ov{position:fixed;inset:0;z-index:9998;pointer-events:none;overflow:hidden}
+  .iris{position:fixed;left:50%;top:50%;width:48vmin;height:48vmin;border-radius:50%;
+    box-shadow:0 0 0 100vmax rgba(10,24,18,.86),inset 0 0 0 8px rgba(255,255,255,.14),inset 0 0 36px 12px rgba(20,60,44,.45);
+    transform:translate(-50%,-50%) scale(2.3);opacity:0;animation:irisA 1.35s ease forwards}
+  @keyframes irisA{0%{transform:translate(-50%,-50%) scale(2.3);opacity:0}16%{opacity:1}34%{transform:translate(-50%,-50%) scale(1)}72%{transform:translate(-50%,-50%) scale(1.04)}100%{transform:translate(-50%,-50%) scale(2.3);opacity:0}}
+  .obs-label{position:fixed;left:50%;bottom:14%;transform:translateX(-50%);background:rgba(18,40,30,.78);color:#fff;
+    padding:8px 20px;border-radius:99px;font-size:17px;font-weight:800;letter-spacing:.8px;backdrop-filter:blur(4px);animation:lblIn .28s ease both}
+  @keyframes lblIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+  @media (hover:hover) and (pointer:fine){
+    .card:hover,.gcard:hover,.lcard:hover{z-index:80}
+    .card:not(.mini):hover{transform:translateY(-4px) scale(1.42);box-shadow:0 16px 36px rgba(18,42,24,.34)}
+    .card.mini:hover{transform:scale(1.9);box-shadow:0 16px 36px rgba(18,42,24,.34)}
+    .gcard:hover{transform:translateY(-4px) scale(1.38);box-shadow:0 16px 36px rgba(18,42,24,.32)}
+  }
+
+  /* 移动端长按预览 */
+  #cardpreview{position:fixed;inset:0;z-index:9997;background:rgba(14,26,18,.82);backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;padding:24px;flex-direction:column;gap:14px}
+  #cardpreview .pvbox{transform:scale(1.85);transform-origin:center}
+  #cardpreview .tip{color:rgba(255,255,255,.85);font-size:13px;margin-top:46px}
+
+  @media (prefers-reduced-motion:reduce){
+    .phasebanner{animation-duration:.5s} .roundhud .seat.now,.zone-hot,button.bgm-on::after,.lake-mist,.lake-birds{animation:none}
+  }
+  @media (max-width:640px){
+    .wrap{padding:6px 9px 84px}
+    .panel{padding:10px;border-radius:13px}
+    header.top{padding:8px 10px} header.top h1{font-size:16.5px}
+    .card{width:70px} .card .art{height:44px} .card.mini{width:48px} .card.mini .art{height:32px}
+    .gcard{width:106px}
+    .goalbar .mini{display:none}
+    .scoreboard .pchip{min-width:calc(50% - 5px)}
+  }
+</style>
+<style>
+/* Songjiang field notebook. The table retains the layout of the v6 UI. */
+:root { --sj-paper:#f7f3e7; --sj-sheet:#fffcf3; --sj-ink:#203e34; --sj-muted:#52675a; --sj-red:#a44030; --sj-rule:#aab5a3; --sj-green:#294f40; --sj-serif:"Noto Serif SC","Songti SC","STSong","SimSun",Georgia,serif; }
+.sj-svg-library { position:absolute; overflow:hidden; pointer-events:none; }
+body { background:var(--sj-paper); color:var(--sj-ink); }
+body .lake-bg { opacity:.4; }
+body:not([data-sj-view="board"]) .wrap, body:not([data-sj-view="board"]) .lake-bg { display:none; }
+body:not([data-sj-view="board"]) .phasebanner { display:none; }
+[hidden] { display:none!important; }
+#sj-screen { max-width:1176px; margin:auto; min-height:100vh; padding:0 clamp(16px,4.2vw,62px) 34px; background:radial-gradient(ellipse at 82% 14%,#f2ead9 0,transparent 46%); }
+#sj-screen button, .sj-nav button { font-family:inherit; box-shadow:none; letter-spacing:.02em; }
+#sj-screen button:focus-visible,.sj-nav button:focus-visible, .wrap button:focus-visible { outline:3px solid #a04d2c; outline-offset:3px; }
+.sj-head { min-height:75px; display:flex; align-items:center; justify-content:space-between; gap:12px; border-bottom:1px solid var(--sj-rule); }
+.sj-brand { display:flex; align-items:center; gap:10px; padding:4px 0; border-radius:0; background:transparent; color:var(--sj-ink); font-size:17px; font-weight:750; }
+.sj-brand-mark { width:37px; height:37px; display:grid; place-items:center; background:var(--sj-red); border:1px solid var(--sj-red); box-shadow:inset 0 0 0 2px var(--sj-paper); color:var(--sj-sheet); font-family:var(--sj-serif); font-size:21px; font-weight:bold; }
+.sj-nav { display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center; }
+.sj-nav button,.sj-back { color:var(--sj-green); background:transparent; border-radius:0; padding:5px 0; border-bottom:1px solid transparent; font-size:13px; }
+.sj-nav button:hover,.sj-back:hover { border-color:var(--sj-green); box-shadow:none; }
+.sj-hero { display:grid; grid-template-columns:minmax(0,.86fr) minmax(0,1.28fr); gap:clamp(22px,3.6vw,62px); align-items:center; padding:clamp(30px,5vw,70px) 0 clamp(25px,3.3vw,51px); }
+.sj-eye { color:var(--sj-red); font-weight:700; font-size:13px; letter-spacing:.14em; margin:0 0 16px; }
+.sj-hero h1 { font-family:var(--sj-serif); font-weight:750; font-size:clamp(43px,5vw,75px); line-height:1.15; letter-spacing:.02em; margin:0; color:#243e34; }
+.sj-hero h1 span { display:block; font-size:.57em; color:var(--sj-green); margin:13px 0 0; letter-spacing:.14em; }
+.sj-deck { color:#3c5246; font-size:16px; line-height:1.78; max-width:27em; margin:21px 0 23px; }
+.sj-actions { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
+.sj-primary,.sj-secondary { border-radius:4px; border:1px solid var(--sj-green); padding:11px 17px; font-size:14px; line-height:1.25; }
+.sj-primary { background:var(--sj-green); color:#fffaf0; }
+.sj-secondary { background:transparent; color:var(--sj-green); }
+.sj-primary:hover { background:#193d31; }.sj-secondary:hover { background:#e8ecdf; }
+.sj-art { margin:0; background:#e6e4cf; border:1px solid #899789; border-radius:3px; padding:6px; position:relative; }
+.sj-art svg { width:100%; display:block; aspect-ratio:680/380; border:1px solid #8e9e89; }
+.sj-art figcaption { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:3px 12px; color:#48594c; padding:7px 4px 0; font-size:11px; letter-spacing:.04em; }
+.sj-art figcaption b { color:#2b473a; font-weight:650; }
+.sj-section { padding:23px 0; border-top:1px solid var(--sj-rule); }
+.sj-section-head { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px 12px; margin:0 0 14px; }
+.sj-section-head h2,.sj-page h1,.sj-section h3 { font-family:var(--sj-serif); color:var(--sj-ink); margin:0; }
+.sj-section-head h2 { font-size:23px; }
+.sj-section-head span,.sj-meta,.sj-foot { font-size:12px; color:var(--sj-muted); }
+.sj-places { list-style:none; padding:0; margin:0; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); border:1px solid #b8c0ad; border-radius:3px; overflow:hidden; }
+.sj-places li { display:flex; flex-direction:column; padding:12px 10px; gap:6px; border-left:1px solid #c2c9b7; background:rgba(255,253,245,.38); }
+.sj-places li:first-child { border-left:none; }.sj-places b { font-size:15px; color:var(--sj-ink); }.sj-places small { color:var(--sj-muted); font-size:11px; }
+.sj-foot { display:flex; justify-content:space-between; gap:8px 18px; flex-wrap:wrap; align-items:center; border-top:1px solid #c0c6b6; padding:13px 0; line-height:1.7; }
+.sj-foot a,.sj-cite a { color:var(--sj-green); text-underline-offset:3px; }
+.sj-page { max-width:890px; margin:0 auto; padding:26px 0 20px; }
+.sj-page h1 { font-size:clamp(32px,4.6vw,52px); margin:8px 0; line-height:1.2; }
+.sj-page .sj-eye { margin:8px 0 7px; }.sj-page .sj-deck { max-width:44em; margin:10px 0 22px; }
+.sj-routebar { display:flex; flex-wrap:wrap; gap:5px 12px; list-style:none; margin:0 0 22px; padding:0; }
+.sj-routebar li { font-size:13px; color:#667164; padding:3px 0; border-bottom:2px solid #c6cdba; }.sj-routebar li[aria-current="step"] { color:var(--sj-red); border-color:var(--sj-red); font-weight:700; }.sj-routebar li.sj-done { color:var(--sj-green); border-color:#577960; }
+.sj-question { margin:0 0 17px; padding:16px 19px; border-left:3px solid var(--sj-red); background:#ede7d7; color:#334a3c; font-size:clamp(15px,2.1vw,19px); line-height:1.65; }
+.sj-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.sj-pick { padding:0; overflow:hidden; background:var(--sj-sheet); border:1px solid #a4b19e; border-radius:4px; color:var(--sj-ink); text-align:left; min-width:0; }
+.sj-pick:hover { outline:2px solid #668675; outline-offset:-2px; }.sj-pick svg { width:100%; display:block; aspect-ratio:120/73; object-fit:cover; }.sj-pick strong,.sj-pick small { display:block; margin:8px 12px; }.sj-pick strong { font-size:17px; }.sj-pick small { font-weight:400; font-size:12px; color:var(--sj-muted); margin-top:-4px; }
+.sj-feedback { color:var(--sj-red); font-weight:650; line-height:1.6; margin:12px 0 4px; min-height:1.6em; }
+.sj-stop { background:var(--sj-sheet); border:1px solid #b7c0ac; border-radius:4px; padding:17px; margin:12px 0 19px; }
+.sj-stop h2 { font:700 22px/1.45 var(--sj-serif); margin:0 0 7px; }.sj-stop p { margin:6px 0 9px; line-height:1.7; }
+.sj-find { display:grid; grid-template-columns:130px 1fr; gap:18px; align-items:center; }.sj-find svg { width:100%; border-radius:3px; }
+.sj-cite { color:var(--sj-muted); font-size:12px; margin-top:13px; line-height:1.7; }
+.sj-ribbon { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }.sj-ribbon span { background:#e7ebdd; border-radius:3px; font-size:13px; padding:4px 8px; }
+.sj-seal { width:88px; height:88px; display:grid; place-items:center; flex-shrink:0; color:var(--sj-red); border:3px double var(--sj-red); border-radius:50%; transform:rotate(-7deg); font:bold 19px/1.28 var(--sj-serif); text-align:center; }
+.sj-result { display:flex; gap:18px; align-items:center; }.sj-result strong { color:var(--sj-green); }
+.sj-library { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:11px; }
+.sj-entry { background:var(--sj-sheet); border:1px solid #bbc3af; padding:12px; border-radius:3px; }
+.sj-entry h3 { display:flex; gap:8px; align-items:center; font:700 17px/1.4 var(--sj-serif); margin:0; }.sj-entry p { margin:8px 0 1px; font-size:13px; line-height:1.6; color:#405448; }.sj-entry svg { width:46px; height:34px; border-radius:3px; }
+.sj-tabs { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 16px; }.sj-tabs button { padding:7px 13px; font-size:13px; }
+.sj-setup { max-width:540px; }.sj-choice-row { display:grid; grid-template-columns:130px 1fr; gap:10px; align-items:center; margin:12px 0; }
+.sj-choice-row select,.sj-select { background:var(--sj-sheet); color:var(--sj-ink); border:1px solid #9ca995; border-radius:3px; font:inherit; padding:8px; width:100%; }
+.sj-check { display:flex; align-items:center; gap:8px; margin:15px 0 20px; }.sj-check input { width:17px; height:17px; }
+.sj-sites-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.sj-site-tag { font-size:8.5px; line-height:1.2; margin-top:3px; text-align:center; padding:0 2px; }
+.sj-guide-place { color:#596746; font-size:9px; margin:2px 0; }.sj-comment { border-left:3px solid #af6147; background:#fcf3e1; border-radius:3px; padding:8px 12px; margin:8px 0; font-size:13px; line-height:1.55; }
+.sj-preview-note { color:white; background:#28463b; padding:9px; border-radius:4px; max-width:290px; margin:52px 0 0; text-align:center; }.sj-preview-note+.tip { margin-top:8px!important; }
+body[data-sj-view="board"] .wrap { max-width:1280px; }.wrap header.top { border-radius:5px; border-bottom:2px solid #6d8370; }.wrap header h1 { font-family:var(--sj-serif); }
+.wrap .panel,.wrap .goalbar,.wrap .pchip,.wrap .roundhud { border-radius:7px; }.wrap .panel { border-color:#b9c5ae; }.wrap .goalbar { background:linear-gradient(105deg,#274d3b,#456b5c); }
+@media(max-width:760px) { .sj-hero { grid-template-columns:1fr; gap:17px; padding:23px 0; }.sj-hero-copy { display:contents; }.sj-hero .sj-eye { margin:0 0 -7px; }.sj-hero h1 { font-size:43px; }.sj-hero h1 span { display:inline-block; margin:0 0 0 10px; font-size:.46em; }.sj-hero .sj-deck { margin:0; font-size:14px; }.sj-hero .sj-art { grid-row:3; }.sj-hero .sj-actions { margin-top:-2px; }.sj-head { min-height:55px; }.sj-nav { gap:12px; }.sj-places { grid-template-columns:repeat(3,minmax(0,1fr)); }.sj-places li:nth-child(4) { border-left:0; }.sj-places li:nth-child(n+4) { border-top:1px solid #c2c9b7; }.sj-library { grid-template-columns:repeat(2,minmax(0,1fr)); }.sj-page { padding-top:18px; } }
+@media(max-width:460px) { #sj-screen { padding:0 15px 20px; }.sj-brand { font-size:14px; gap:7px; }.sj-brand-mark { height:29px; width:29px; font-size:17px; }.sj-nav { gap:9px; }.sj-nav button { font-size:12px; }.sj-hero h1 { font-size:36px; }.sj-cards { gap:6px; }.sj-pick strong,.sj-pick small { margin:5px 7px; }.sj-pick strong { font-size:14px; }.sj-pick small { font-size:10px; }.sj-find { grid-template-columns:84px 1fr; gap:12px; }.sj-library { grid-template-columns:1fr; }.sj-sites-list { grid-template-columns:1fr; }.sj-stop { padding:13px; }.sj-choice-row { grid-template-columns:100px 1fr; }.sj-section { padding:17px 0; }.sj-nav .sj-sound { max-width:82px; }.sj-art figcaption { font-size:10px; } }
+@media(prefers-reduced-motion:reduce) { *,*::after,*::before { animation-duration:.001ms!important; transition-duration:.001ms!important; } }
+
+.sj-foot details { max-width:520px; }.sj-foot summary,.sj-stop summary { cursor:pointer; }.sj-foot p { margin:5px 0; }
+
+</style>
+</head>
+<body data-sj-view="home">
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" class="sj-svg-library" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="sjSky" x2=".12" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#94b8ad"/><stop offset=".52" stop-color="#e3dfb9"/><stop offset="1" stop-color="#efdba9"/></linearGradient>
+    <linearGradient id="sjWater" x2="1" y2="1"><stop stop-color="#94b3a0"/><stop offset=".55" stop-color="#577e75"/><stop offset="1" stop-color="#244e4c"/></linearGradient>
+    <linearGradient id="sjWing" x1="0" x2="1" y2="1"><stop stop-color="#7a9296"/><stop offset=".46" stop-color="#596e76"/><stop offset="1" stop-color="#353f4d"/></linearGradient>
+    <linearGradient id="sjNeck" x2=".85" y2="1"><stop stop-color="#f6efcf"/><stop offset=".37" stop-color="#e8dfc3"/><stop offset="1" stop-color="#a2ada1"/></linearGradient>
+    <pattern id="sjLines" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 5 5 0" stroke="#182f29" stroke-opacity=".14" stroke-width=".5"/></pattern>
+    <g id="sjReed" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M0 0Q6-46-2-98M1-20Q-12-49-29-66M4-36Q13-69 29-88" stroke-width="2.5"/><path d="M-2-96q-8-12-9-26m10 24q5-18 0-27m0 19q-5-14-13-18m13 17q2-12 5-18" stroke-width="1.9"/></g>
+    <symbol id="sj-heron" viewBox="0 0 325 340">
+      <!-- A black-crowned night heron drawn for this edition. -->
+      <g stroke-linecap="round" stroke-linejoin="round">
+        <path d="M147 229q15 19 15 30l-11 50m30-73 8 22-3 46" fill="none" stroke="#49513f" stroke-width="9"/>
+        <path d="M146 231q12 17 14 28l-10 48m29-70 8 21-3 45" fill="none" stroke="#b79b53" stroke-width="5"/>
+        <path d="m151 306-23 10m23-10 3 10m-4-9 24-1m11-2-11 11m11-11 27 2m-26-1 8 8" fill="none" stroke="#837744" stroke-width="3"/>
+        <path d="M105 65C91 30 119 16 146 21c32 7 37 34 37 56 3 19 21 37 50 72 17 20 33 55 65 101-26-4-60-13-84-25-11 14-43 24-66 14-30-12-67-56-74-88-8-35 2-60 31-86Z" fill="url(#sjNeck)" stroke="#53645d" stroke-width="1.6"/>
+        <path d="M113 80c-24 13-37 35-36 64 5 32 25 55 48 72-11-19-13-28-19-44-12-39-6-65 7-92Z" fill="#f1e9ce"/>
+        <path d="M142 61c18-9 31-8 41 7 6 25 27 41 51 72 19 23 26 49 56 98-35-9-75-20-101-44-30-27-70-99-47-133Z" fill="#253b3c"/>
+        <path d="M158 98c29-4 53 26 77 64l50 83c-44-10-93-28-120-56-20-22-37-75-7-91Z" fill="url(#sjWing)" stroke="#465961" stroke-width="2"/>
+        <g fill="none" stroke="#bcc1ae" stroke-width="1.15" opacity=".65">
+          <path d="M151 110q2 35 44 62 24 17 46 36M152 130q10 33 55 62l45 25M156 151q12 25 47 46l53 27M165 172q10 19 45 37l44 18"/>
+          <path d="M164 105q23 3 44 34m-36-28q20 7 43 43m-32-16q24 14 44 44m-26-22 40 43m-18-14 34 36"/>
+        </g>
+        <path d="M94 65c1-29 20-44 46-47 24-2 37 14 44 34-14-3-30-8-42-3-10 5-21 16-48 16Z" fill="#253b3c"/>
+        <path d="M102 53c12-24 31-32 48-29" fill="none" stroke="#819087" stroke-width="2"/>
+        <path d="M167 33q40-9 83 48M171 38q43 0 74 57" fill="none" stroke="#524f43" stroke-opacity=".38" stroke-width="3.5"/>
+        <path d="M167 31q40-9 83 48M171 36q43 0 74 57" fill="none" stroke="#faf3d6" stroke-width="2.2"/>
+        <path d="M103 59q15-8 32-6l-9 13-25 9Z" fill="#cfbc81"/>
+        <path d="M107 62 39 83q28-2 67-9l13-9Z" fill="#253c38" stroke="#334a40"/>
+        <path d="m45 81 62-12" fill="none" stroke="#8b986f" stroke-width="1.3"/>
+        <ellipse cx="125" cy="61" rx="6.8" ry="6" fill="#b54a31" stroke="#75553d" stroke-width="1.4"/><circle cx="125" cy="61" r="2.8" fill="#182821"/><circle cx="123.5" cy="59" r="1.15" fill="#fff8db"/>
+        <g fill="none" stroke="#858d78" opacity=".67" stroke-width="1.2">
+          <path d="M103 89q-12 18-13 34m15-22q-9 15-8 29m-5 5 8 25m4-18 7 19m-2 5 10 17m-4-32 6 13M130 208l16 15m-6-7 13 9"/>
+        </g>
+      </g>
+    </symbol>
+    <symbol id="sj-riverscape" viewBox="0 0 680 380">
+      <rect width="680" height="380" fill="url(#sjSky)"/>
+      <circle cx="472" cy="94" r="57" fill="#f2bd79" opacity=".88"/>
+      <path d="M0 162q60-31 115-20 46-17 84-45 29-19 64 3 54 34 118 40 42 0 79-17 45-21 100 8 75 36 120 26v94H0Z" fill="#9eb49b"/>
+      <path d="M0 158q55-35 106-20 40 10 71-13 27-16 56-29 28-11 75 25 44 32 82 34 74 4 130-10 86-16 160 20v68H0Z" fill="#7c9986"/>
+      <path d="M0 177q69-11 96-22 27-10 61 0 47 16 92 8 67-13 104-4l55 18 272-8v68H0Z" fill="#547965"/>
+      <g fill="#475e53" stroke="#475e53" stroke-linejoin="round">
+        <path d="M198 112v-10h4v-6h19v6h4v9zm5-16a8.5 8.5 0 0 1 17 0z"/><path d="M212 87v-5" stroke-width="1.5"/>
+      </g>
+      <path d="M0 182q117-7 212-6 141 4 243 1t225 0v203H0Z" fill="url(#sjWater)"/>
+      <g stroke="#e4e0b6" fill="none" stroke-linecap="round" opacity=".68">
+        <path d="M39 199h65m32-6h35m101 7h95m-48 7h91m9-12h63m-154 27h107m22-10h45m-389 19h62m136 13h99m-31 9h60M36 246h62m110 26h50m81 2h65m-113 16h59m-43-54h37"/><path d="M185 184q77 3 155 0m128 4 134-2" stroke-width="2"/>
+      </g>
+      <g stroke-linejoin="round">
+        <path d="m91 202 28-23 31 22-11 3Z" fill="#aa805d"/><path d="m117 180 10 20-35 2Z" fill="#bc9b70"/>
+        <path d="m126 204 40-40 54 37-13 5Z" fill="#9b7658"/><path d="m165 165 20 35-59 4Z" fill="#bc966c"/><path d="m169 172 16 28m-25-24-22 25m32-22 10 21" fill="none" stroke="#927559" stroke-width="1"/>
+        <path d="m218 201 20-21 30 20-6 3Z" fill="#9a795d"/><path d="m237 181 11 18-29 2Z" fill="#c2a276"/>
+        <path d="m133 208 30 12 37-14m-91 1 13 6 16-6" fill="#6b8273" opacity=".55"/>
+      </g>
+      <g fill="none" stroke="#486359" stroke-width="1.8" stroke-linecap="round"><path d="M76 75q8-5 13 1 6-7 14-8m14 20q6-4 10 1 4-5 10-6m-67 21q5-4 9 0 5-5 9-5"/></g>
+      <path d="M0 361q43-37 111-37 71 2 126 28 42 19 74 28H0Z" fill="#466951"/>
+      <g color="#486d53"><use href="#sjReed" transform="translate(40 334) rotate(-15) scale(.87)"/><use href="#sjReed" transform="translate(70 342) rotate(12) scale(.72)"/><use href="#sjReed" transform="translate(22 345) scale(1.16)"/></g>
+      <path d="M680 345q-91 7-156-20-48-19-99-23-37-1-92-19l-8 2q49 25 94 29 51 5 96 25 74 33 165 29Z" fill="#584f3d"/>
+      <path d="M551 337q-35-32-47-56m18 42q-20-10-34-25m-83 9-41-29" fill="none" stroke="#625d46" stroke-width="5" stroke-linecap="round"/>
+      <use href="#sj-heron" x="348" y="10" width="317" height="323"/>
+      <g color="#304f41"><use href="#sjReed" transform="translate(641 392) rotate(13) scale(1.2)"/><use href="#sjReed" transform="translate(678 383) rotate(-10) scale(1.5)"/><use href="#sjReed" transform="translate(621 392) rotate(-13) scale(.77)"/></g>
+      <rect width="680" height="380" fill="url(#sjLines)" opacity=".22"/>
+    </symbol>
+  </defs>
+</svg>
+
+<main id="sj-screen" aria-label="松江观鸟"></main>
+<div class="lake-bg" aria-hidden="true">
+  <div class="lake-mist"></div>
+  <svg class="lake-birds" viewBox="0 0 150 60" fill="none">
+    <path d="M18 32 Q28 22 36 30 Q44 22 54 32" stroke="#3c6654" stroke-width="2" stroke-linecap="round"/>
+    <path d="M78 18 Q85 11 91 17 Q97 11 104 18" stroke="#4b7565" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M112 38 Q117 33 121 37 Q125 33 130 38" stroke="#5b8274" stroke-width="1.3" stroke-linecap="round"/>
+  </svg>
+  <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="lkHill1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a5cabf"/><stop offset="100%" stop-color="#87b8b0"/></linearGradient>
+      <linearGradient id="lkWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#b7dcd7"/><stop offset="100%" stop-color="#8ec1be"/></linearGradient>
+    </defs>
+    <path d="M0,175 C240,120 460,195 740,150 C1020,105 1230,170 1440,138 L1440,320 L0,320 Z" fill="url(#lkHill1)" opacity=".45"/>
+    <path d="M0,205 C320,185 520,218 880,195 C1150,178 1310,205 1440,192 L1440,320 L0,320 Z" fill="url(#lkWater)" opacity=".65"/>
+    <ellipse cx="1080" cy="240" rx="220" ry="8" fill="#fff7dd" opacity=".45"/>
+    <ellipse cx="420" cy="264" rx="180" ry="6" fill="#eef9f8" opacity=".35"/>
+    <g stroke="#2d5f47" stroke-width="2.4" stroke-linecap="round" opacity=".55">
+      <path d="M36,320 Q42,245 32,190"/><path d="M52,320 Q56,255 68,208"/>
+      <path d="M68,320 Q72,265 62,226"/><path d="M1388,320 Q1380,250 1394,195"/>
+      <path d="M1406,320 Q1410,262 1422,216"/>
+    </g>
+    <g fill="#5b462c" opacity=".55">
+      <rect x="30" y="198" width="5" height="22" rx="2.5"/><rect x="1390" y="202" width="5" height="20" rx="2.5"/>
+    </g>
+  </svg>
+</div>
+
+<div class="wrap">
+  <header class="top">
+    <h1>观鸟俱乐部 <span class="sub">松江印象</span></h1>
+    <div class="spacer"></div>
+    <button class="ghost bgm-on sm" id="bgmbtn" onclick="BGM.toggle()" title="切换富林晨曲、鸟鸣或静音">富林晨曲</button>
+    <button class="ghost sm" id="animbtn" onclick="UI.toggleAnim()">🎬 动画:开</button>
+    <button class="ghost sm" onclick="UI.openRules()">📖 规则</button>
+    <button class="ghost sm" onclick="Songjiang.journal()">观鸟手册</button>
+    <button class="ghost sm" onclick="Songjiang.home()">回到封面</button>
+  </header>
+
+  <div class="goalbar">
+    <span>🎯</span><b>目标：率先到 15 分 · 宣布终局</b>
+    <span class="mini">建鸟类群落 → 观鸟拿图鉴 → 把图鉴当景观打出才计分 · 终局储备区每张 −1</span>
+    <div class="prog"><i id="progbar" style="width:0%"></i></div>
+    <span class="mini" id="progtxt">0 / 15</span>
+  </div>
+
+  <div id="roundhud" class="roundhud" style="display:none"></div>
+  <div id="scoreboard" class="scoreboard"></div>
+  <aside id="sj-comment" class="sj-comment" aria-live="polite" hidden></aside>
+
+  <div class="panel">
+    <h2>公共区</h2>
+    <div class="lab">🐤 鸟类展示区（每回合采集 1 次）</div>
+    <div id="market" class="row"></div>
+
+    <div class="lab" style="margin-top:12px">
+      <span>📖 图鉴景观卡 · <b>24 张全部卡面向上平铺</b>　<span style="color:#2e6f4e">观鸟拿进储备区</span> · <span style="color:#0277bd">当景观打出才计分</span></span>
+      <div class="filterbar">
+        <span id="guidesummary" style="font-weight:700;color:#2e6f4e"></span>
+        <button class="pillbtn" id="gfilterbtn" onclick="UI.toggleGuideFilter()">✨ 仅亮可拿/差1只</button>
+      </div>
+    </div>
+    <div class="lab" style="margin-top:6px">等级① · 2 分</div>
+    <div id="pool1" class="gpool"></div>
+    <div class="lab" style="margin-top:8px">等级② · 4 分</div>
+    <div id="pool2" class="gpool"></div>
+
+    <div class="lab" style="margin-top:12px">云间印章（按<b>已打出</b>的景观种类领取，每人限一枚）</div>
+    <div id="achs" class="row"></div>
+  </div>
+
+  <div class="panel" id="mypanel">
+    <h2 id="mytitle">你的桌面</h2>
+    <div id="mybody"></div>
+  </div>
+
+  <div class="panel"><h2>同桌鸟友</h2><div id="opps" class="row"></div></div>
+
+  <div class="actionbar">
+    <div class="prompt" id="prompt"></div>
+    <div class="btns" id="btns"></div>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="panel" style="margin-top:10px"><h2>对局日志</h2><div class="log" id="log"></div></div>
+</div>
+<div id="overlay"></div>
+
+<script>
+/* ============================================================================
+   观鸟俱乐部！ v6-live — 线上版游戏核心 (game-core-v6-live.js)
+   = game-core-v5.js 的同构副本（API/流程/校验完全一致），数据表换成
+   作者 2026-08-31 22:39 最新稿：
+     · 12 鸟栖息地重排；白鹭→黄嘴白鹭、猫头鹰→雕鸮[沙地,湖泊]、天鹅→小天鹅[湿地,沙地]
+     · 图鉴景观卡 24 张全部重排（②级不再有"三只同类"，全部 2+1 / 1+1+1）
+     · 普通翠鸟改为[天空,湖泊]，6 张图鉴的保留禽类调整
+     · 8 张成就全部重做，低档 2 分 / 高档 4 分
+     · 完整众筹解锁：原鸽/朱鹮/黄鹂/白鹈鹕/花头鹦鹉/伯劳（各 4 张）
+     · 保留结算按 8/29 原文：检视「本回合拿取的」+「所有已打出的」图鉴景观卡
+       （8/17 版 R6 只算"该群落中已打出的"，此处是两版规则文本的实际差异）
+   参考实现（独立写成、已跑 1.6 万局验证）：src/game-core-v6.js；
+   两者数据表由 test/test-consistency-v6.js 逐项对拍。
+   ========================================================================== */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.BirdGameV6Live = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  /* --------------------------- 鸟（12 种 × 6 张 = 72，一鸟两景观） -------- */
+  const SPECIES = {
+    yelu:     { key:'yelu',     name:'夜鹭',     cat:'涉禽', hab:['树冠','草地'] },
+    banjiu:   { key:'banjiu',   name:'珠颈斑鸠', cat:'陆禽', hab:['沙地','树冠'] },
+    wudong:   { key:'wudong',   name:'乌鸫',     cat:'鸣禽', hab:['沙地','草地'] },
+    bailu:    { key:'bailu',    name:'黄嘴白鹭', cat:'涉禽', hab:['天空','湿地'] },
+    shaji:    { key:'shaji',    name:'沙鸡',     cat:'陆禽', hab:['湖泊','沙地'] },
+    shuiju:   { key:'shuiju',   name:'红尾水鸲', cat:'鸣禽', hab:['湿地','草地'] },
+    hongsun:  { key:'hongsun',  name:'红隼',     cat:'猛禽', hab:['天空','草地'] },
+    maoying:  { key:'maoying',  name:'雕鸮',     cat:'猛禽', hab:['沙地','湖泊'] },
+    daisheng: { key:'daisheng', name:'戴胜',     cat:'攀禽', hab:['树冠','湿地'] },
+    lvtouya:  { key:'lvtouya',  name:'绿头鸭',   cat:'游禽', hab:['天空','湖泊'] },
+    tiane:    { key:'tiane',    name:'小天鹅',   cat:'游禽', hab:['湿地','沙地'] },
+    cuiniao:  { key:'cuiniao',  name:'普通翠鸟', cat:'攀禽', hab:['天空','湖泊'] },
+  };
+  const SPECIES_ORDER = Object.keys(SPECIES);
+  const COUNT_EACH = 6;
+
+  /* 可选扩展鸟牌组。 */
+  const PACKS = {
+    stretch: [
+      { key:'yuange',  name:'原鸽',     cat:'陆禽', hab:['草地','湿地'], copies:4 },
+      { key:'zhuhuan', name:'朱鹮',     cat:'涉禽', hab:['湿地','湖泊'], copies:4 },
+      { key:'huangli', name:'黄鹂',     cat:'鸣禽', hab:['树冠','天空'], copies:4 },
+      { key:'tihu',    name:'白鹈鹕',   cat:'游禽', hab:['草地','湖泊'], copies:4 },
+      { key:'yingwu',  name:'花头鹦鹉', cat:'攀禽', hab:['树冠','沙地'], copies:4 },
+      { key:'bolao',   name:'伯劳',     cat:'猛禽', hab:['天空','树冠'], copies:4 },
+    ],
+  };
+  const CATS = ['涉禽','陆禽','鸣禽','猛禽','攀禽','游禽'];
+  const LAND_ORDER = ['草地','天空','湿地','沙地','树冠','湖泊'];
+  const PLAIN_COUNT = 2;                 // 普通景观每类 2 张 = 12
+
+  const SEG_CAP  = 3;                    // R1：每栖息地最多 3 鸟
+  const HAB_CAP  = 2;                    // 一个群落最多 2 个栖息地
+  const WIN_SCORE = 15;
+
+  /* --------------------------- 图鉴景观卡（24 张，全部可见） -------------- */
+  function GD(lvl, ls, req, keep, i){ return { id:(lvl===1?'A':'B')+i, lvl, ls, req, keep,
+    pts: lvl===1?2:4, name:(lvl===1?'①':'②')+i+' '+ls+'·'+Object.keys(req).map(k=>k.slice(0,1)+req[k]).join('') }; }
+  const GUIDES = [
+    GD(1,'天空',{'猛禽':2},'鸣禽',1),            GD(1,'湿地',{'涉禽':2},'鸣禽',2),
+    GD(1,'湖泊',{'游禽':2},'涉禽',3),            GD(1,'树冠',{'攀禽':2},'猛禽',4),
+    GD(1,'草地',{'鸣禽':2},'涉禽',5),            GD(1,'沙地',{'陆禽':2},'猛禽',6),
+    GD(1,'湿地',{'涉禽':1,'游禽':1},'游禽',7),   GD(1,'天空',{'游禽':1,'鸣禽':1},'攀禽',8),
+    GD(1,'沙地',{'猛禽':1,'陆禽':1},'游禽',9),   GD(1,'湖泊',{'游禽':1,'猛禽':1},'陆禽',10),
+    GD(1,'草地',{'攀禽':1,'鸣禽':1},'攀禽',11),  GD(1,'树冠',{'攀禽':1,'涉禽':1},'陆禽',12),
+    GD(2,'天空',{'猛禽':2,'攀禽':1},'鸣禽',1),   GD(2,'树冠',{'攀禽':2,'涉禽':1},'涉禽',2),
+    GD(2,'湿地',{'涉禽':2,'攀禽':1},'陆禽',3),   GD(2,'天空',{'猛禽':1,'涉禽':1,'游禽':1},'猛禽',4),
+    GD(2,'草地',{'鸣禽':2,'涉禽':1},'陆禽',5),   GD(2,'沙地',{'陆禽':1,'猛禽':1,'游禽':1},'涉禽',6),
+    GD(2,'树冠',{'涉禽':1,'陆禽':1,'攀禽':1},'游禽',7), GD(2,'湖泊',{'猛禽':1,'游禽':1,'陆禽':1},'鸣禽',8),
+    GD(2,'湿地',{'游禽':1,'攀禽':1,'鸣禽':1},'游禽',9), GD(2,'草地',{'猛禽':1,'攀禽':1,'陆禽':1},'猛禽',10),
+    GD(2,'湖泊',{'游禽':2,'陆禽':1},'攀禽',11),  GD(2,'沙地',{'陆禽':2,'鸣禽':1},'攀禽',12),
+  ];
+  const GUIDE_BY_ID = {}; GUIDES.forEach(g=>GUIDE_BY_ID[g.id]=g);
+
+  /* --------------------------- 成就（8 张，8/31 稿，每人限 1） ---------- */
+  function AC(i, req, pts){ return { id:i, req, pts,
+    name:'成就'+i+'('+Object.keys(req).map(k=>k.slice(0,1)+req[k]).join('')+'='+pts+'分)' }; }
+  const ACH = [
+    AC(1,{'草地':2,'天空':1,'沙地':1},2),
+    AC(2,{'湖泊':1,'沙地':1,'树冠':1,'草地':1},2),
+    AC(3,{'湖泊':1,'湿地':1,'天空':1,'沙地':1},2),
+    AC(4,{'树冠':1,'湖泊':1,'天空':1,'湿地':1},2),
+    AC(5,{'沙地':2,'天空':1,'湖泊':1,'湿地':1},4),
+    AC(6,{'湿地':2,'树冠':1,'湖泊':1,'沙地':1},4),
+    AC(7,{'湖泊':1,'草地':1,'树冠':1,'湿地':1,'沙地':1},4),
+    AC(8,{'天空':2,'树冠':1,'湖泊':1,'草地':1},4),
+  ];
+
+  /* --------------------------- 基础工具 ---------------------------------- */
+  function makeRng(seed){ let s=((seed==null?0x9e3779b9:seed)>>>0); return function(){ s|=0; s=(s+0x6D2B79F5)|0; let t=Math.imul(s^(s>>>15),1|s); t=(t+Math.imul(t^(t>>>7),61|t))^t; return ((t^(t>>>14))>>>0)/4294967296; }; }
+  function shuffle(a,rng){ const x=a.slice(); for(let i=x.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); const t=x[i];x[i]=x[j];x[j]=t; } return x; }
+  /* 牌库构成：
+       null      → 原版 12 种 × 6 张 = 72
+       'even'    → 每种各 +1 张 = 84（种类不变，只是每种 7 张）
+       'stretch' → 作者 8/31 完整众筹：6 种新鸟 × 各 4 张 = 96 */
+  function buildDeck(extra){
+    const d=[]; for(const k of SPECIES_ORDER) for(let i=0;i<COUNT_EACH;i++) d.push(k);
+    if(extra==='even'){ for(const k of SPECIES_ORDER) d.push(k); }
+    else if(PACKS[extra]){
+      for(const sp of PACKS[extra]){ SPECIES[sp.key]=sp; for(let i=0;i<(sp.copies||COUNT_EACH);i++) d.push(sp.key); }
+    }
+    return d;
+  }
+  function deckSize(extra){
+    if(extra==='even') return COUNT_EACH*SPECIES_ORDER.length+SPECIES_ORDER.length;
+    const pack=PACKS[extra];
+    return COUNT_EACH*SPECIES_ORDER.length+(pack?pack.reduce((n,x)=>n+(x.copies||COUNT_EACH),0):0);
+  }
+  function birdLegal(sp, ls){ return SPECIES[sp] && SPECIES[sp].hab.indexOf(ls)>=0; }
+
+  // 群落内禽类计数（跨该群落的所有栖息地）
+  function groupCat(gr, cat){ let n=0; for(const h of gr.habs) for(const b of h.birds) if(SPECIES[b].cat===cat) n++; return n; }
+  function groupBirds(gr){ let n=0; for(const h of gr.habs) n+=h.birds.length; return n; }
+  // 图鉴条件按【单个群落】判定
+  function guideMetGroup(g, gr){ for(const c in g.req) if(groupCat(gr,c)<g.req[c]) return false; return true; }
+  // 成就：所有群落里已打出的景观合计
+  function landCounts(p){ const o={}; for(const gr of p.groups) for(const h of gr.habs) o[h.ls]=(o[h.ls]||0)+1; return o; }
+  // 已打出的②级图鉴张数（②级＝需 3 只鸟、最难凑的那一档）
+  function playedLv2(p){ let n=0; for(const gr of p.groups) for(const h of gr.habs) if(h.guide&&h.guide.lvl===2) n++; return n; }
+  /* achMet(p, a, needLv2)：needLv2>0 时，额外要求「已打出至少 needLv2 张②级图鉴」。
+     这是为验算作者 8/17 提的「把难拿的图鉴和成就绑定、好拿的图鉴就不容易拿成就」
+     所加的开关；默认 0＝作者原文（只看景观组合）。 */
+  function achMet(p, a, needLv2){
+    if(needLv2 && playedLv2(p) < needLv2) return false;
+    const lc=landCounts(p); for(const L in a.req) if((lc[L]||0)<a.req[L]) return false; return true;
+  }
+  function allHabs(p){ const o=[]; for(const gr of p.groups) for(const h of gr.habs) o.push(h); return o; }
+
+  /* --------------------------- AI 打法 ----------------------------------- */
+  const STYLES = {
+    rush:    { key:'rush',    name:'速通',   prefLevel:1 },
+    tall:    { key:'tall',    name:'大局',   prefLevel:2 },
+    achfirst:{ key:'achfirst',name:'成就流', achFocus:true },
+    wide:    { key:'wide',    name:'多群落', wideFocus:true },
+    balance: { key:'balance', name:'均衡' },
+  };
+  const STYLE_ORDER = ['rush','tall','achfirst','wide','balance'];
+
+  /* --------------------------- 建局 -------------------------------------- */
+  function newGame(opts){
+    opts=opts||{};
+    const names=opts.names||['玩家1','玩家2'];
+    const cpu=opts.cpu||names.map(()=>true);
+    const styles=opts.styles||names.map(()=>'balance');
+    const rng=makeRng(opts.seed!=null?opts.seed:12345);
+    const st={
+      rng, players:[], cur:0,
+      extraPack: opts.extraPack||null,       // 众筹解锁包：'stretch' | null
+      deck:shuffle(buildDeck(opts.extraPack||null),rng), discard:[], market:[],
+      plainPool:{},
+      pool1:GUIDES.filter(g=>g.lvl===1).slice(),   // 全部可见的图鉴池（不是展示区）
+      pool2:GUIDES.filter(g=>g.lvl===2).slice(),
+      achPool:ACH.map(a=>({id:a.id, taken:false})),
+      round:1, first:0, turnCount:0,
+      phase:'play', obLeft:0, obTaken:false, _collected:false, _built:false,
+      ended:false, ender:null, gameOver:false, winner:null, ranking:null,
+      // 候选补丁开关（默认全关＝作者原文口径）
+      handCap: opts.handCap|0,            // >0：回合结束手牌上限，多余弃入弃牌堆
+      deckOutEnd: !!opts.deckOutEnd,      // true：鸟类卡池耗尽时按当前分数结束（防死锁兜底）
+      deckOutRounds: opts.deckOutRounds||2, // 需连续几轮「牌池空且无人观鸟」才结束（2 轮实测零误伤）
+      winScore: opts.winScore||WIN_SCORE,   // 终局线（默认 15＝作者原文；仅用于数值验算）
+      achNeedLv2: opts.achNeedLv2|0,        // 成就额外要求已打出 N 张②级图鉴（默认 0＝作者原文）
+      _roundTook: false,                  // 本轮是否有人成功观鸟（兜底判定用）
+      _dryRounds: 0,
+      log:[],
+      stat:{ guideTaken:{}, obMissed:0, kept:0, achTaken:{}, groupsMax:0, discarded:0 },
+    };
+    for(const L of LAND_ORDER) st.plainPool[L]=PLAIN_COUNT;
+    for(let i=0;i<names.length;i++) st.players.push({
+      id:i, name:names[i], isCPU:cpu[i]!==false, style:styles[i]||'balance',
+      hand:[], plain:[], reserve:[],
+      groups:[],        // [{ habs:[{ls,guide,birds}], fillFrom:0 }]
+      ach:null,
+    });
+    for(const p of st.players) for(let i=0;i<6;i++) p.hand.push(st.deck.pop());
+    return st;
+  }
+
+  function autoDraft(st){
+    const N=st.players.length;
+    const order=[]; for(let i=0;i<N;i++) order.push(i); for(let i=N-1;i>=0;i--) order.push(i);
+    for(const pi of order){
+      const p=st.players[pi];
+      let best=null,bs=-1e9;
+      for(const L of LAND_ORDER){
+        if(st.plainPool[L]<=0 || p.plain.indexOf(L)>=0) continue;   // 禁拿两张相同
+        let n=0; for(const b of p.hand) if(birdLegal(b,L)) n++;
+        const s=n*2+st.rng()*0.3;
+        if(s>bs){bs=s;best=L;}
+      }
+      if(best){ st.plainPool[best]--; p.plain.push(best); }
+      let wi=0,ws=1e9;
+      for(let i=0;i<p.hand.length;i++){
+        const fit=SPECIES[p.hand[i]].hab.filter(L=>p.plain.indexOf(L)>=0).length;
+        const s=fit*3+st.rng()*0.2; if(s<ws){ws=s;wi=i;}
+      }
+      if(p.hand.length) st.discard.push(p.hand.splice(wi,1)[0]);
+    }
+    for(let i=0;i<5;i++){ const c=drawCard(st); if(c) st.market.push(c); }
+    st.phase='play'; st.cur=st.first;
+    return st;
+  }
+
+  function drawCard(st){
+    if(st.deck.length===0){ if(st.discard.length){ st.deck=shuffle(st.discard,st.rng); st.discard=[]; } else return null; }
+    return st.deck.pop();
+  }
+  function refillMarket(st){ while(st.market.length<5){ const c=drawCard(st); if(!c) break; st.market.push(c); } }
+  function curPlayer(st){ return st.players[st.cur]; }
+  /* 日志：纯展示层，不参与任何规则判定。联机时 hub 会对泄露隐藏信息的行打码。 */
+  function lg(st, line){ if(!st.log) st.log=[]; st.log.push(line); if(st.log.length>400) st.log.splice(0, st.log.length-400); }
+  function nm(st){ return st.players[st.cur].name; }
+  function bn(sp){ return SPECIES[sp] ? SPECIES[sp].name : sp; }
+
+  /* 作者规定每回合先采集、再构建。只有客观上无牌可采/无合法构建时才允许跳过，
+     避免牌池耗尽或手牌不匹配时把对局锁死。 */
+  function canCollect(st){ return !!(st && st.market && st.market.length); }
+  function canBuild(p){
+    if(!p) return false;
+    for(const b of p.hand){
+      if(p.plain.some(L=>birdLegal(b,L)) || p.reserve.some(g=>birdLegal(b,g.ls))) return true;
+    }
+    for(const gr of p.groups) for(let hi=gr.fillFrom;hi<gr.habs.length;hi++){
+      const h=gr.habs[hi];
+      if(h.birds.length<SEG_CAP && p.hand.some(b=>birdLegal(b,h.ls))) return true;
+    }
+    return false;
+  }
+
+  /* --------------------------- 采集 -------------------------------------- */
+  function collectOne(st, mi){
+    if(st.gameOver) return {ok:false,err:'对局已结束'};
+    if(st.phase!=='play') return {ok:false,err:'非行动阶段'};
+    if(st._collected) return {ok:false,err:'本回合已采集'};
+    const p=curPlayer(st);
+    if(!Number.isInteger(mi)||mi<0||mi>=st.market.length) return {ok:false,err:'展示区无此牌'};
+    const sp=st.market.splice(mi,1)[0];
+    p.hand.push(sp); refillMarket(st); st._collected=true;
+    lg(st, nm(st)+' 采集了 '+bn(sp)+'。');
+    return {ok:true};
+  }
+  function collectTwo(st, mi1, mi2, handIdx){
+    if(st.gameOver) return {ok:false,err:'对局已结束'};
+    if(st.phase!=='play') return {ok:false,err:'非行动阶段'};
+    if(st._collected) return {ok:false,err:'本回合已采集'};
+    const p=curPlayer(st);
+    if(![mi1,mi2].every(i=>Number.isInteger(i)&&i>=0&&i<st.market.length)||mi1===mi2) return {ok:false,err:'展示区索引非法'};
+    if(!Number.isInteger(handIdx)||handIdx<0||handIdx>=p.hand.length+2) return {ok:false,err:'弃牌索引非法'};
+    const hi=[mi1,mi2].sort((a,b)=>b-a);
+    const g1=st.market.splice(hi[0],1)[0], g2=st.market.splice(hi[1],1)[0];
+    p.hand.push(g1,g2);
+    const drop=p.hand.splice(handIdx,1)[0]; st.discard.push(drop);
+    refillMarket(st); st._collected=true;
+    lg(st, nm(st)+' 采集了 '+bn(g1)+'、'+bn(g2)+'，弃掉 '+bn(drop)+'。');
+    return {ok:true};
+  }
+
+  /* --------------------------- 构建 --------------------------------------
+     打景观：source={plain:'草地'} 或 {reserve:idx}
+       groupIdx=null → 新建一个群落；否则给该群落加第 2 个栖息地 */
+  function buildHabitat(st, source, handIdx, groupIdx){
+    if(st.gameOver) return {ok:false,err:'对局已结束'};
+    if(st.phase!=='play') return {ok:false,err:'非行动阶段'};
+    if(!st._collected && canCollect(st)) return {ok:false,err:'请先完成采集，再进行构建'};
+    if(st._built) return {ok:false,err:'本回合已构建'};
+    const p=curPlayer(st);
+    let ls=null, guide=null;
+    if(source && typeof source.plain==='string'){
+      if(p.plain.indexOf(source.plain)<0) return {ok:false,err:'你没有这张普通景观'};
+      ls=source.plain;
+    } else if(source && Number.isInteger(source.reserve)){
+      if(source.reserve<0||source.reserve>=p.reserve.length) return {ok:false,err:'储备区无此图鉴'};
+      guide=p.reserve[source.reserve]; ls=guide.ls;
+    } else return {ok:false,err:'来源非法'};
+    if(!Number.isInteger(handIdx)||handIdx<0||handIdx>=p.hand.length) return {ok:false,err:'手牌索引非法'};
+    if(!birdLegal(p.hand[handIdx], ls)) return {ok:false,err:'该鸟不能放入此景观'};
+
+    let gr=null;
+    if(groupIdx==null){                       // 新建群落
+      gr={ habs:[], fillFrom:0 }; p.groups.push(gr);
+    } else {
+      if(!Number.isInteger(groupIdx)||groupIdx<0||groupIdx>=p.groups.length) return {ok:false,err:'群落非法'};
+      gr=p.groups[groupIdx];
+      if(gr.habs.length>=HAB_CAP) return {ok:false,err:'一个群落最多 '+HAB_CAP+' 个栖息地'};
+      if(gr.habs[gr.habs.length-1].birds.length===0) return {ok:false,err:'上一个栖息地还没有鸟'};
+    }
+    if(guide) p.reserve.splice(source.reserve,1); else p.plain.splice(p.plain.indexOf(ls),1);
+    const first=p.hand.splice(handIdx,1)[0];
+    gr.habs.push({ ls, guide, birds:[first] });
+    lg(st, nm(st)+' 在'+(groupIdx==null?'新群落':'群落'+(groupIdx+1))+'打出'
+      +(guide?('图鉴景观【'+guide.name+'】'):('景观【'+ls+'】'))+'，并放入 '+bn(first)+'。');
+    gr.fillFrom = gr.habs.length-1;           // 开建新栖息地 → 左侧封闭
+    st._built=true;
+    if(p.groups.length>st.stat.groupsMax) st.stat.groupsMax=p.groups.length;
+    return {ok:true, group:p.groups.indexOf(gr), hab:gr.habs.length-1};
+  }
+  // 往某群落的某栖息地放 1-2 只鸟
+  function buildBirds(st, groupIdx, habIdx, handIdxs){
+    if(st.gameOver) return {ok:false,err:'对局已结束'};
+    if(st.phase!=='play') return {ok:false,err:'非行动阶段'};
+    if(!st._collected && canCollect(st)) return {ok:false,err:'请先完成采集，再进行构建'};
+    if(st._built) return {ok:false,err:'本回合已构建'};
+    const p=curPlayer(st);
+    if(!Number.isInteger(groupIdx)||groupIdx<0||groupIdx>=p.groups.length) return {ok:false,err:'群落非法'};
+    const gr=p.groups[groupIdx];
+    if(!Number.isInteger(habIdx)||habIdx<0||habIdx>=gr.habs.length) return {ok:false,err:'栖息地非法'};
+    if(habIdx<gr.fillFrom) return {ok:false,err:'该群落已开建右侧，不能回头'};
+    if(!Array.isArray(handIdxs)||handIdxs.length<1||handIdxs.length>2) return {ok:false,err:'一次放 1–2 只'};
+    const seen=new Set();
+    for(const i of handIdxs){ if(!Number.isInteger(i)||i<0||i>=p.hand.length||seen.has(i)) return {ok:false,err:'手牌索引非法'}; seen.add(i); }
+    const h=gr.habs[habIdx];
+    if(h.birds.length+handIdxs.length>SEG_CAP) return {ok:false,err:'每栖息地最多 '+SEG_CAP+' 鸟'};
+    for(const i of handIdxs) if(!birdLegal(p.hand[i],h.ls)) return {ok:false,err:'鸟与景观不符'};
+    const sp=handIdxs.map(i=>p.hand[i]);
+    handIdxs.slice().sort((a,b)=>b-a).forEach(i=>p.hand.splice(i,1));
+    for(const x of sp) h.birds.push(x);
+    gr.fillFrom=habIdx;
+    st._built=true;
+    lg(st, nm(st)+' 在群落'+(groupIdx+1)+'的【'+h.ls+'】放入 '+sp.map(bn).join('、')+'。');
+    return {ok:true};
+  }
+
+  function endTurn(st){
+    if(st.gameOver) return {ok:false,err:'对局已结束'};
+    if(st.phase!=='play') return {ok:false,err:'非行动阶段'};
+    if(!st._collected && canCollect(st)) return {ok:false,err:'本回合还没有采集'};
+    if(!st._built && canBuild(curPlayer(st))) return {ok:false,err:'本回合还没有构建'};
+    // 候选补丁 A：手牌上限——回合结束弃到上限（弃入弃牌堆，可再洗回牌堆）
+    if(st.handCap>0){
+      const p=curPlayer(st);
+      while(p.hand.length>st.handCap){
+        let wi=0,ws=1e9;
+        for(let i=0;i<p.hand.length;i++){
+          const s=SPECIES[p.hand[i]].hab.filter(L=>allHabs(p).some(h=>h.ls===L)||p.plain.indexOf(L)>=0).length+st.rng()*0.1;
+          if(s<ws){ws=s;wi=i;}
+        }
+        st.discard.push(p.hand.splice(wi,1)[0]); st.stat.discarded++;
+      }
+    }
+    st.turnCount++; st._collected=false; st._built=false;
+    const nxt=(st.cur+1)%st.players.length;
+    if(nxt===st.first){ st.phase='observe'; st.cur=st.first; st.obLeft=st.players.length; st.obTaken=false; st._roundTook=false; }
+    else st.cur=nxt;
+    refillMarket(st);   // 展示区随时补满：归还到弃牌堆的鸟应能重新进入展示区
+    return {ok:true};
+  }
+
+  /* --------------------------- 观鸟 -------------------------------------- */
+  // 列出「某群落 × 某图鉴」的所有可行组合
+  function observableOptions(st, p){
+    const out=[];
+    p.groups.forEach((gr,gi)=>{
+      st.pool1.forEach((g,i)=>{ if(guideMetGroup(g,gr)) out.push({group:gi, lvl:1, idx:i, g}); });
+      st.pool2.forEach((g,i)=>{ if(guideMetGroup(g,gr)) out.push({group:gi, lvl:2, idx:i, g}); });
+    });
+    return out;
+  }
+  function keepQuota(p, newGuide){
+    const quota={};
+    if(newGuide) quota[newGuide.keep]=(quota[newGuide.keep]||0)+1;
+    for(const gr of p.groups) for(const h of gr.habs) if(h.guide) quota[h.guide.keep]=(quota[h.guide.keep]||0)+1;
+    return quota;
+  }
+  // 旧录像/电脑的确定性默认选择；真人界面会显式传 keepChoices，让玩家自己选鸟和去向。
+  function autoKeepChoices(p, gr, newGuide){
+    const quota=keepQuota(p,newGuide), out=[];
+    gr.habs.forEach((h,hi)=>h.birds.forEach((b,bi)=>{
+      const c=SPECIES[b].cat;
+      if(quota[c]>0){ quota[c]--; out.push({hab:hi,bird:bi,toHand:hi>0}); }
+    }));
+    return out;
+  }
+  // 观鸟：对 groupIdx 群落拿取一张达成的图鉴 → 归还该群落的鸟（按玩家选择保留）
+  function obTake(st, groupIdx, lvl, idx, keepChoices){
+    if(st.gameOver) return {ok:false,err:'对局已结束'};
+    if(st.phase!=='observe') return {ok:false,err:'非观鸟阶段'};
+    if(st.obTaken) return {ok:false,err:'本轮已观鸟'};
+    const p=curPlayer(st);
+    if(!Number.isInteger(groupIdx)||groupIdx<0||groupIdx>=p.groups.length) return {ok:false,err:'群落非法'};
+    const gr=p.groups[groupIdx];
+    const pool = lvl===1?st.pool1:st.pool2;
+    if(!Number.isInteger(idx)||idx<0||idx>=pool.length) return {ok:false,err:'图鉴池无此卡'};
+    const g=pool[idx];
+    if(!guideMetGroup(g,gr)) return {ok:false,err:'该群落未达成此图鉴条件'};
+
+    const choices = keepChoices==null ? autoKeepChoices(p,gr,g) : keepChoices;
+    if(!Array.isArray(choices)) return {ok:false,err:'保留鸟选择非法'};
+    const quota=keepQuota(p,g), picked=new Map();
+    for(const x of choices){
+      if(!x || !Number.isInteger(x.hab) || !Number.isInteger(x.bird)
+        || x.hab<0 || x.hab>=gr.habs.length || x.bird<0 || x.bird>=gr.habs[x.hab].birds.length)
+        return {ok:false,err:'保留鸟位置非法'};
+      const key=x.hab+':'+x.bird;
+      if(picked.has(key)) return {ok:false,err:'同一只鸟不能重复保留'};
+      const c=SPECIES[gr.habs[x.hab].birds[x.bird]].cat;
+      if(!quota[c]) return {ok:false,err:'超过了 '+c+' 的保留名额'};
+      if(x.hab>0 && !x.toHand) return {ok:false,err:'第二个栖息地的保留鸟必须收回手牌'};
+      quota[c]--; picked.set(key,{toHand:!!x.toHand});
+    }
+
+    pool.splice(idx,1); p.reserve.push(g);
+    st.stat.guideTaken[g.id]=(st.stat.guideTaken[g.id]||0)+1;
+    st.obTaken=true; st._roundTook=true;
+    lg(st, nm(st)+' 对群落'+(groupIdx+1)+'观鸟成功，拿取图鉴【'+g.name+'】到储备区。');
+
+    let kept=0, returned=0, toHand=0;
+    gr.habs.forEach((h,hi)=>{
+      const stay=[];
+      h.birds.forEach((b,bi)=>{
+        const pick=picked.get(hi+':'+bi);
+        if(pick){
+          kept++;
+          if(hi>0 || pick.toHand){ p.hand.push(b); toHand++; }
+          else stay.push(b);
+        } else { st.discard.push(b); returned++; }
+      });
+      h.birds=stay;
+    });
+    gr.fillFrom=0;
+    st.stat.kept+=kept;
+    lg(st, '　群落'+(groupIdx+1)+'：归还 '+returned+' 只，保留 '+kept+' 只'
+      +(toHand?('（其中 '+toHand+' 只在第二个栖息地，收回手牌）'):'')+'。');
+    return {ok:true, kept, returned, toHand};
+  }
+  function obTakeAch(st, achId){
+    if(st.gameOver) return {ok:false,err:'对局已结束'};
+    if(st.phase!=='observe') return {ok:false,err:'非观鸟阶段'};
+    const p=curPlayer(st);
+    if(p.ach!=null) return {ok:false,err:'每人全局限拿 1 张成就'};
+    const slot=st.achPool.find(x=>x.id===achId && !x.taken);
+    if(!slot) return {ok:false,err:'该成就已被拿走'};
+    const a=ACH.find(x=>x.id===achId);
+    if(!achMet(p,a,st.achNeedLv2)) return {ok:false,err:'未达成该成就条件'};
+    slot.taken=true; p.ach=achId;
+    st.stat.achTaken[achId]=(st.stat.achTaken[achId]||0)+1;
+    lg(st, nm(st)+' 达成 '+a.name+'。');
+    return {ok:true};
+  }
+  function obFinish(st, declare){
+    if(st.gameOver) return {ok:false,err:'对局已结束'};
+    if(st.phase!=='observe') return {ok:false,err:'非观鸟阶段'};
+    const pi=st.cur;
+    if(!st.obTaken){ st.stat.obMissed++; lg(st, st.players[pi].name+' 本轮观鸟没能达成任何图鉴。'); }
+    if(declare && currentScore(st,pi)>=st.winScore && !st.ended){ st.ended=true; st.ender=pi;
+      lg(st, '★ '+st.players[pi].name+' 宣布终局（当前 '+currentScore(st,pi)+' 分）——本轮观鸟走完后结算。'); }
+    st.obLeft--; st.obTaken=false;
+    if(st.obLeft<=0){
+      if(st.ended){ st.gameOver=true; finalize(st); lg(st, '=== 游戏结束 ==='); return {ok:true}; }
+      st.first=(st.first+1)%st.players.length;
+      st.round++; st.phase='play'; st.cur=st.first;
+      refillMarket(st);   // 观鸟归还的鸟进入弃牌堆后，新一轮开始前把展示区补满
+      lg(st, '—— 第 '+st.round+' 轮 ——');
+      /* 候选补丁 B：防死锁兜底。判定必须放在【一整轮观鸟走完之后】——
+         观鸟归还的鸟要到这时才进弃牌堆，若在观鸟前判定，会把「瞬时归零又回血」
+         的健康对局误判成终局（实测误伤 0.028%，甚至改变冠军归属）。
+         再加「且本轮无人成功观鸟」一条，把误伤压到 0。 */
+      if(st.deckOutEnd){
+        const dry = !st._roundTook && st.deck.length+st.discard.length+st.market.length===0;
+        st._dryRounds = dry ? st._dryRounds+1 : 0;
+        if(st._dryRounds>=st.deckOutRounds){
+          lg(st, '⚠ 鸟类牌堆、弃牌堆与展示区皆空，且连续 '+st.deckOutRounds+' 轮无人观鸟成功 → 按当前分数结束。');
+          st.gameOver=true; st.ended=true; if(st.ender==null) st.ender=-1; finalize(st);
+        }
+      }
+    } else st.cur=(st.cur+1)%st.players.length;
+    return {ok:true};
+  }
+
+  /* --------------------------- 计分 -------------------------------------- */
+  function guidePoints(p){ let s=0; for(const gr of p.groups) for(const h of gr.habs) if(h.guide) s+=h.guide.pts; return s; }
+  function achPoints(p){ if(p.ach==null) return 0; const a=ACH.find(x=>x.id===p.ach); return a?a.pts:0; }
+  function currentScore(st,pi){ const p=st.players[pi]; return guidePoints(p)+achPoints(p); }
+  function finalScore(st,pi){ const p=st.players[pi]; return currentScore(st,pi)-p.reserve.length; }
+  function finalize(st){
+    const rank=st.players.map((p,i)=>({ i, name:p.name, style:p.style, score:finalScore(st,i),
+      guides:guidePoints(p), ach:achPoints(p), reserve:p.reserve.length,
+      nPlayed:allHabs(p).filter(h=>h.guide).length, nGroups:p.groups.length }));
+    rank.sort((a,b)=>b.score-a.score||b.ach-a.ach||b.guides-a.guides);
+    st.ranking=rank; st.winner=rank[0];
+  }
+
+  /* --------------------------- AI ---------------------------------------- */
+  function guideDesire(st,p,g,gr){
+    const style=STYLES[p.style]||STYLES.balance;
+    let d=g.pts;
+    if(style.prefLevel===g.lvl) d+=1.5;
+    let gap=0; for(const c in g.req) gap+=Math.max(0,g.req[c]-(gr?groupCat(gr,c):0));
+    d-=gap*1.3;
+    if(style.achFocus && p.ach==null){
+      const lc=landCounts(p);
+      for(const a of ACH){ const slot=st.achPool.find(x=>x.id===a.id&&!x.taken); if(!slot) continue;
+        if(a.req[g.ls] && (lc[g.ls]||0)<a.req[g.ls]){ d+=1.5; break; } }
+    }
+    return d;
+  }
+  // 当前最想凑的图鉴（针对某群落）
+  function targetFor(st,p,gr){
+    let best=null,bd=-1e9;
+    for(const pool of [st.pool1,st.pool2]) for(const g of pool){ const d=guideDesire(st,p,g,gr); if(d>bd){bd=d;best=g;} }
+    return best;
+  }
+  // 给定一个群落的禽类构成，估它「离最好的一张图鉴还有多远」
+  function bestGroupValue(st, catCounts){
+    let best=-1e9;
+    for(const pool of [st.pool1,st.pool2]) for(const g of pool){
+      let gap=0; for(const c in g.req) gap+=Math.max(0,g.req[c]-(catCounts[c]||0));
+      const v=g.pts-gap*1.3; if(v>best) best=v;
+    }
+    return best===-1e9?0:best;
+  }
+  function birdHelp(g,sp,gr){
+    if(!g) return 0.2;
+    const c=SPECIES[sp].cat;
+    if(g.req[c] && (gr?groupCat(gr,c):0)<g.req[c]) return 3;
+    if(g.req[c]) return 0.6;
+    return 0.15;
+  }
+  function cpuAction(st){
+    const p=curPlayer(st);
+    const style=STYLES[p.style]||STYLES.balance;
+    // 以"最有希望的群落"为主攻对象
+    let focus=null, focusIdx=null, ft=null, fd=-1e9;
+    p.groups.forEach((gr,gi)=>{ const t=targetFor(st,p,gr); const d=t?guideDesire(st,p,t,gr):-9;
+      if(d>fd){ fd=d; focus=gr; focusIdx=gi; ft=t; } });
+    const target = ft || targetFor(st,p,null);
+
+    /* 采集 */
+    if(st.market.length){
+      let bi=0,bs=-1e9;
+      for(let i=0;i<st.market.length;i++){
+        const b=st.market[i];
+        let s=birdHelp(target,b,focus);
+        const canHost = p.groups.some(gr=>gr.habs.some((h,hi)=>hi>=gr.fillFrom && h.birds.length<SEG_CAP && birdLegal(b,h.ls)))
+                     || p.plain.some(L=>birdLegal(b,L)) || p.reserve.some(gg=>birdLegal(b,gg.ls));
+        if(canHost) s+=1.2;
+        s+=st.rng()*0.25;
+        if(s>bs){bs=s;bi=i;}
+      }
+      if(p.hand.length>=6 && st.market.length>=2){
+        let bj=-1,bs2=-1e9;
+        for(let i=0;i<st.market.length;i++){ if(i===bi)continue; const s=birdHelp(target,st.market[i],focus); if(s>bs2){bs2=s;bj=i;} }
+        let wi=0,ws=1e9;
+        for(let i=0;i<p.hand.length;i++){ const s=birdHelp(target,p.hand[i],focus); if(s<ws){ws=s;wi=i;} }
+        if(bj>=0) collectTwo(st,bi,bj,wi); else collectOne(st,bi);
+      } else collectOne(st,bi);
+    }
+
+    /* 构建：① 优先打储备图鉴（计分 + 免终局扣分） */
+    // 枚举「新建群落 / 扩建某群落」两类落点，各自打分（不再硬编码打法）
+    function siteOptions(st,p,ls,sp,style){
+      const out=[{ tg:null, val:bestGroupValue(st,{ [SPECIES[sp].cat]:1 }) + (style.wideFocus?0.9:0) }];
+      p.groups.forEach((gr,gi)=>{
+        if(gr.habs.length>=HAB_CAP) return;
+        if(gr.habs[gr.habs.length-1].birds.length===0) return;
+        const cc={}; for(const c of CATS) cc[c]=groupCat(gr,c);
+        cc[SPECIES[sp].cat]=(cc[SPECIES[sp].cat]||0)+1;
+        out.push({ tg:gi, val:bestGroupValue(st,cc) + (style.wideFocus?0:0.5) });
+      });
+      out.sort((a,b)=>b.val-a.val);
+      return out[0];
+    }
+    let built=false;
+    if(p.reserve.length){
+      let best=null,bs=-1e9;
+      for(let ri=0;ri<p.reserve.length;ri++){
+        const g=p.reserve[ri];
+        for(let hi=0;hi<p.hand.length;hi++){
+          if(!birdLegal(p.hand[hi],g.ls)) continue;
+          const site=siteOptions(st,p,g.ls,p.hand[hi],style);
+          const s=g.pts + birdHelp(target,p.hand[hi],focus)*0.3 + p.reserve.length*0.5 + site.val*0.6;
+          if(s>bs){bs=s;best={ri,hi,tg:site.tg};}
+        }
+      }
+      if(best) built=buildHabitat(st,{reserve:best.ri},best.hi,best.tg).ok;
+    }
+    /* ② 往现有栖息地放鸟推进目标 */
+    if(!built){
+      const cand=[];
+      p.groups.forEach((gr,gi)=>{
+        const t=targetFor(st,p,gr);
+        gr.habs.forEach((h,hi)=>{
+          if(hi<gr.fillFrom || h.birds.length>=SEG_CAP) return;
+          for(let k=0;k<p.hand.length;k++) if(birdLegal(p.hand[k],h.ls))
+            cand.push({gi,hi,k,score:birdHelp(t,p.hand[k],gr)+(gi===focusIdx?0.5:0)});
+        });
+      });
+      cand.sort((a,b)=>b.score-a.score);
+      if(cand.length){
+        const pick=cand[0], idxs=[pick.k];
+        const h=p.groups[pick.gi].habs[pick.hi];
+        if(SEG_CAP-h.birds.length>=2){
+          const second=cand.find(c=>c.gi===pick.gi&&c.hi===pick.hi&&c.k!==pick.k);
+          if(second) idxs.push(second.k);
+        }
+        built=buildBirds(st,pick.gi,pick.hi,idxs).ok;
+      }
+    }
+    /* ③ 打普通景观 */
+    if(!built && p.plain.length){
+      let best=null,bs=-1e9;
+      for(const L of p.plain){
+        for(let hi=0;hi<p.hand.length;hi++){
+          if(!birdLegal(p.hand[hi],L)) continue;
+          const site=siteOptions(st,p,L,p.hand[hi],style);
+          const s=birdHelp(target,p.hand[hi],focus)+0.5+site.val*0.6;
+          if(s>bs){bs=s;best={L,hi,tg:site.tg};}
+        }
+      }
+      if(best) built=buildHabitat(st,{plain:best.L},best.hi,best.tg).ok;
+    }
+    endTurn(st);
+  }
+  function cpuObserve(st){
+    const p=curPlayer(st);
+    const opts=observableOptions(st,p);
+    if(opts.length){
+      /* 平手必须随机打破，不能按池内顺序取前者。
+         v5 的图鉴条件按【整个群落】判定、与卡面印的景观无关，所以存在「拿取条件与分数
+         完全相同」的成对图鉴（如 ②1 树冠·猛2攀1 与 ②10 草地·猛2攀1）。稳定排序会让
+         索引在前的那张永远被选中，从而在统计里伪造出巨大的冷热差——那是量具的假象，
+         不是游戏的性质。给每个选项加一点随机抖动即可消除。 */
+      const jit=new Map();
+      for(const o of opts) jit.set(o, st.rng()*1e-6);
+      opts.sort((a,b)=>(guideDesire(st,p,b.g,p.groups[b.group])+jit.get(b))
+                      -(guideDesire(st,p,a.g,p.groups[a.group])+jit.get(a)));
+      const pick=opts[0];
+      obTake(st,pick.group,pick.lvl,pick.idx);
+    }
+    if(p.ach==null){
+      let best=null;
+      for(const a of ACH){
+        const slot=st.achPool.find(x=>x.id===a.id&&!x.taken); if(!slot) continue;
+        if(achMet(p,a,st.achNeedLv2)){ if(!best||a.pts>best.pts) best=a; }
+      }
+      if(best) obTakeAch(st,best.id);
+    }
+    obFinish(st, currentScore(st,st.cur)>=st.winScore);
+  }
+  function cpuStep(st){ if(st.gameOver) return false; if(st.phase==='play') cpuAction(st); else cpuObserve(st); return true; }
+  /* cpuTurn：走完当前行动者的一整"步"（行动回合含 endTurn，或一个观鸟步含 obFinish）。
+     供联机 hub 托管电脑座位用——与 cpuStep 语义相同，另起名字是为了和 v2 的 hub 接口对齐。 */
+  function cpuTurn(st){ return cpuStep(st); }
+
+  return {
+    SPECIES, SPECIES_ORDER, CATS, LAND_ORDER, PLAIN_COUNT, COUNT_EACH,
+    GUIDES, GUIDE_BY_ID, ACH, STYLES, STYLE_ORDER, WIN_SCORE, SEG_CAP, HAB_CAP, PACKS,
+    makeRng, shuffle, buildDeck, deckSize, newGame, autoDraft, drawCard, refillMarket, curPlayer,
+    canCollect, canBuild,
+    collectOne, collectTwo, buildHabitat, buildBirds, endTurn,
+    birdLegal, groupCat, groupBirds, guideMetGroup, landCounts, achMet, allHabs,
+    observableOptions, keepQuota, autoKeepChoices, obTake, obTakeAch, obFinish,
+    guidePoints, achPoints, currentScore, finalScore, finalize, playedLv2,
+    cpuStep, cpuTurn, cpuAction, cpuObserve, targetFor, lg,
+  };
+});
+
+</script>
+<script>
+/* =============================================================================
+   观鸟俱乐部 v6（8/31 最新稿）网页界面 · 清晨湖畔润色版
+   规则全部来自 src/game-core-v6-live.js —— 界面【只做展示与动作发送】，绝不自行判定规则。
+   ========================================================================== */
+const G = (typeof BirdGameV6Live!=='undefined')?BirdGameV6Live:window.BirdGameV6Live;
+const S=G.SPECIES, LO=G.LAND_ORDER;
+const CPU_DELAY=650;
+
+/* ===================== 🎵 班得瑞风「清晨湖畔」零依赖 Web Audio 引擎 ===================== */
+const BGM=(function(){
+  const KEY='birding-songjiang.sound.v1';
+  let mode='full'; // 'full' | 'nature' | 'off'
+  try{ const saved=localStorage.getItem(KEY); if(saved==='full'||saved==='nature'||saved==='off') mode=saved; }catch(e){}
+  let ac=null, master=null, musicGain=null, natureGain=null, sfxGain=null, echoIn=null, reverbIn=null;
+  let started=false, timer=null, step=0, nextTime=0, nextBirdTime=0, noiseNode=null;
+
+  const STEP=0.45; // ~67 BPM 八分音符
+  const CHORDS=[
+    [53,60,64,69],[52,60,67,72],[50,57,65,69],[45,52,60,67],
+    [46,53,62,69],[45,53,60,69],[43,50,58,65],[48,55,60,64],
+    [53,60,64,69],[52,60,67,72],[50,57,64,69],[45,52,60,67],
+    [46,53,62,69],[43,50,58,65],[48,55,62,65],[53,60,64,69]
+  ];
+  const ARP=[0,1,2,3,2,1,2,3];
+  // 16小节舒缓排箫/陶笛旋律（F大调五声音阶抒情乐句，留白充足）
+  const MEL={
+    0:{0:[81,3],3:[79,1],4:[77,4]}, 1:{0:[79,2],2:[81,2],4:[84,4]},
+    2:{0:[86,3],3:[84,1],4:[81,4]}, 3:{},
+    4:{0:[82,2],2:[81,2],4:[79,2],6:[77,2]}, 5:{0:[81,3],3:[79,1],4:[77,4]},
+    6:{0:[74,2],2:[77,2],4:[79,4]}, 7:{0:[79,6]},
+    8:{0:[84,3],3:[81,1],4:[79,2],6:[77,2]}, 9:{0:[79,2],2:[84,2],4:[88,4]},
+    10:{0:[86,3],3:[84,1],4:[81,4]}, 11:{0:[79,2],2:[76,2],4:[79,4]},
+    12:{0:[86,2],2:[84,2],4:[82,2],6:[81,2]}, 13:{0:[79,3],3:[77,1],4:[74,4]},
+    14:{0:[77,2],2:[79,2],4:[81,2],6:[79,2]}, 15:{0:[77,7]}
+  };
+  function m2f(m){ return 440*Math.pow(2,(m-69)/12); }
+
+  function ensure(){
+    if(ac) return ac;
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(!C) return null;
+    try{
+      ac=new C();
+      const comp=ac.createDynamicsCompressor();
+      comp.threshold.value=-15; comp.knee.value=24; comp.ratio.value=3.5; comp.attack.value=0.015; comp.release.value=0.25;
+      const warmth=ac.createBiquadFilter(); warmth.type='lowpass'; warmth.frequency.value=4800; warmth.Q.value=0.5;
+      master=ac.createGain(); master.gain.value=0.0001;
+      master.connect(warmth); warmth.connect(comp); comp.connect(ac.destination);
+
+      musicGain=ac.createGain(); musicGain.gain.value=(mode==='full'?1:0.0001); musicGain.connect(master);
+      natureGain=ac.createGain(); natureGain.gain.value=(mode==='off'?0.0001:1); natureGain.connect(master);
+      sfxGain=ac.createGain(); sfxGain.gain.value=(mode==='off'?0.0001:0.9); sfxGain.connect(master);
+
+      // 湖面回声延迟
+      const dl=ac.createDelay(1.0); dl.delayTime.value=0.38;
+      const dlLp=ac.createBiquadFilter(); dlLp.type='lowpass'; dlLp.frequency.value=950;
+      const dlFb=ac.createGain(); dlFb.gain.value=0.24;
+      const dlOut=ac.createGain(); dlOut.gain.value=0.34;
+      echoIn=ac.createGain();
+      echoIn.connect(dl); dl.connect(dlLp); dlLp.connect(dlFb); dlFb.connect(dl); dlLp.connect(dlOut); dlOut.connect(master);
+
+      // 程序生成 1.9s 清晨湖泊混响冲激响应
+      reverbIn=ac.createGain();
+      try{
+        const len=Math.floor(ac.sampleRate*1.9), ir=ac.createBuffer(2,len,ac.sampleRate);
+        for(let ch=0;ch<2;ch++){
+          const d=ir.getChannelData(ch); let lp=0;
+          for(let i=0;i<len;i++){
+            const env=Math.min(1,i/(ac.sampleRate*0.03))*Math.pow(1-i/len,2.6);
+            const wn=(Math.random()*2-1)*env; lp=lp*0.72+wn*0.28; d[i]=lp;
+          }
+        }
+        const conv=ac.createConvolver(); conv.buffer=ir;
+        const revWet=ac.createGain(); revWet.gain.value=0.28;
+        reverbIn.connect(conv); conv.connect(revWet); revWet.connect(master);
+      }catch(e){ reverbIn.connect(echoIn); }
+
+      startLakeAmbience();
+    }catch(e){ ac=null; }
+    return ac;
+  }
+
+  function startLakeAmbience(){
+    if(!ac || noiseNode) return;
+    try{
+      const len=ac.sampleRate*5, buf=ac.createBuffer(1,len,ac.sampleRate), d=buf.getChannelData(0);
+      let b0=0,b1=0,b2=0;
+      for(let i=0;i<len;i++){
+        const w=Math.random()*2-1;
+        b0=0.997*b0+w*0.029; b1=0.985*b1+w*0.032; b2=0.950*b2+w*0.048;
+        const fade=Math.min(1,i/1200, (len-i)/1200);
+        d[i]=(b0+b1+b2)*0.16*fade;
+      }
+      const src=ac.createBufferSource(); src.buffer=buf; src.loop=true;
+      const lp=ac.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=320; lp.Q.value=0.6;
+      const lfo=ac.createOscillator(), lfoG=ac.createGain();
+      lfo.frequency.value=0.12; lfoG.gain.value=140; lfo.connect(lfoG); lfoG.connect(lp.frequency);
+      const bp=ac.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1050; bp.Q.value=1.1;
+      const bpG=ac.createGain(); bpG.gain.value=0.14;
+      const g=ac.createGain(); g.gain.value=0.055;
+      src.connect(lp); lp.connect(g);
+      src.connect(bp); bp.connect(bpG); bpG.connect(g);
+      g.connect(natureGain);
+      src.start(); lfo.start(); noiseNode=src;
+    }catch(e){}
+  }
+
+  function route(node, wet, bus){
+    node.connect(bus);
+    if(echoIn && wet>0){ const wg=ac.createGain(); wg.gain.value=wet; node.connect(wg); wg.connect(echoIn); }
+    if(reverbIn && wet>0){ const rg=ac.createGain(); rg.gain.value=wet*1.1; node.connect(rg); rg.connect(reverbIn); }
+  }
+
+  function playHarp(midi, t, dur, vel){
+    const o1=ac.createOscillator(), o2=ac.createOscillator(), flt=ac.createBiquadFilter(), g=ac.createGain();
+    const f=m2f(midi);
+    o1.type='sine'; o1.frequency.setValueAtTime(f,t);
+    o2.type='triangle'; o2.frequency.setValueAtTime(f*2,t);
+    const g2=ac.createGain(); g2.gain.value=0.18;
+    flt.type='lowpass'; flt.frequency.setValueAtTime(2100,t); flt.frequency.exponentialRampToValueAtTime(480,t+0.55);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.linearRampToValueAtTime(0.055*vel,t+0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o1.connect(flt); o2.connect(g2); g2.connect(flt); flt.connect(g);
+    route(g,0.34,musicGain);
+    o1.start(t); o2.start(t); o1.stop(t+dur+0.05); o2.stop(t+dur+0.05);
+  }
+
+  function playPad(midis, t, dur){
+    midis.slice(0,3).forEach((m,idx)=>{
+      const o=ac.createOscillator(), flt=ac.createBiquadFilter(), g=ac.createGain();
+      o.type=idx===0?'triangle':'sine'; o.frequency.setValueAtTime(m2f(m)*(idx===1?1.0015:0.9988),t);
+      flt.type='lowpass'; flt.frequency.value=420;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.linearRampToValueAtTime(0.017,t+1.25);
+      g.gain.setValueAtTime(0.017,t+dur-1.1);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur+0.2);
+      o.connect(flt); flt.connect(g); g.connect(musicGain);
+      o.start(t); o.stop(t+dur+0.25);
+    });
+  }
+
+  function playFlute(midi, t, dur){
+    const o=ac.createOscillator(), o2=ac.createOscillator(), vib=ac.createOscillator(), vibG=ac.createGain(), g=ac.createGain();
+    const f=m2f(midi);
+    o.type='sine'; o.frequency.setValueAtTime(f,t);
+    o2.type='triangle'; o2.frequency.setValueAtTime(f*2,t);
+    const g2=ac.createGain(); g2.gain.value=0.07;
+    vib.frequency.value=5.1;
+    vibG.gain.setValueAtTime(0.001,t); vibG.gain.linearRampToValueAtTime(3.2,t+0.35);
+    vib.connect(vibG); vibG.connect(o.frequency);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.linearRampToValueAtTime(0.044,t+0.13);
+    g.gain.setValueAtTime(0.040,t+Math.max(0.18,dur-0.24));
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur+0.18);
+    o.connect(g); o2.connect(g2); g2.connect(g);
+    route(g,0.45,musicGain);
+    o.start(t); o2.start(t); vib.start(t);
+    o.stop(t+dur+0.24); o2.stop(t+dur+0.24); vib.stop(t+dur+0.24);
+  }
+
+  function chirpBird(t, kind, vol){
+    if(!ac || mode==='off') return;
+    t=t||ac.currentTime+0.02; vol=(vol==null?1:vol);
+    kind=(kind==null?Math.floor(Math.random()*4):kind);
+    const dest=natureGain;
+    let out=ac.createGain(); out.gain.value=vol;
+    if(ac.createStereoPanner){
+      const pan=ac.createStereoPanner(); pan.pan.value=(Math.random()*1.2-0.6);
+      out.connect(pan); route(pan,0.55,dest);
+    } else route(out,0.55,dest);
+
+    if(kind===0){ // 清脆水鸲双啁啾
+      [0,0.14].forEach((dt,k)=>{
+        const o=ac.createOscillator(), g=ac.createGain(), s=t+dt;
+        o.type='sine'; o.frequency.setValueAtTime(2200+k*260,s); o.frequency.exponentialRampToValueAtTime(3350+k*320,s+0.075);
+        g.gain.setValueAtTime(0.0001,s); g.gain.linearRampToValueAtTime(0.028,s+0.012); g.gain.exponentialRampToValueAtTime(0.0001,s+0.095);
+        o.connect(g); g.connect(out); o.start(s); o.stop(s+0.11);
+      });
+    } else if(kind===1){ // 湖畔黄鹂婉转啼鸣
+      const o=ac.createOscillator(), vib=ac.createOscillator(), vg=ac.createGain(), g=ac.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(1750,t); o.frequency.linearRampToValueAtTime(2350,t+0.09);
+      o.frequency.linearRampToValueAtTime(1550,t+0.19); o.frequency.linearRampToValueAtTime(2150,t+0.29);
+      vib.frequency.value=18; vg.gain.value=85; vib.connect(vg); vg.connect(o.frequency);
+      g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.024,t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t+0.34);
+      o.connect(g); g.connect(out); o.start(t); vib.start(t); o.stop(t+0.36); vib.stop(t+0.36);
+    } else if(kind===2){ // 林间翠鸟三连音
+      [0,0.095,0.19].forEach((dt,k)=>{
+        const o=ac.createOscillator(), g=ac.createGain(), s=t+dt;
+        const f=[2950,3320,2760][k];
+        o.type='sine'; o.frequency.setValueAtTime(f,s); o.frequency.exponentialRampToValueAtTime(f*1.12,s+0.055);
+        g.gain.setValueAtTime(0.0001,s); g.gain.linearRampToValueAtTime(0.022,s+0.008); g.gain.exponentialRampToValueAtTime(0.0001,s+0.07);
+        o.connect(g); g.connect(out); o.start(s); o.stop(s+0.085);
+      });
+    } else { // 远岸斑鸠轻啼
+      [0,0.28].forEach((dt,k)=>{
+        const o=ac.createOscillator(), g=ac.createGain(), s=t+dt;
+        o.type='sine'; o.frequency.setValueAtTime(k?523:622,s); o.frequency.exponentialRampToValueAtTime(k?440:523,s+0.20);
+        g.gain.setValueAtTime(0.0001,s); g.gain.linearRampToValueAtTime(0.024,s+0.04); g.gain.exponentialRampToValueAtTime(0.0001,s+0.24);
+        o.connect(g); g.connect(out); o.start(s); o.stop(s+0.26);
+      });
+    }
+  }
+
+  function schedule(){
+    if(!ac || mode==='off') return;
+    const now=ac.currentTime;
+    if(mode==='full'){
+      while(nextTime < now+0.28){
+        const bar=Math.floor(step/8)%16, beat=step%8, ch=CHORDS[bar];
+        if(beat===0) playPad(ch, nextTime, STEP*8);
+        if(!(beat===7 && (bar===3||bar===7||bar===15))){
+          const n=ch[ARP[beat]%ch.length];
+          const vel=(beat===0?0.95:(beat===4?0.82:0.64));
+          playHarp(n, nextTime, STEP*3.8, vel);
+          if(beat===0 && bar%2===0) playHarp(ch[0]-12, nextTime, STEP*4.5, 0.72);
+        }
+        const m=(MEL[bar]||{})[beat];
+        if(m) playFlute(m[0], nextTime+0.02, STEP*m[1]);
+        step=(step+1)%128; nextTime+=STEP;
+      }
+    } else {
+      nextTime=now+0.05;
+    }
+    if(now >= nextBirdTime){
+      chirpBird(now+0.08);
+      nextBirdTime = now + 3.8 + Math.random()*4.4;
+    }
+  }
+
+  function applyGains(){
+    if(!ac) return;
+    const t=ac.currentTime;
+    master.gain.setTargetAtTime(mode==='off'?0.0001:0.78, t, 0.35);
+    musicGain.gain.setTargetAtTime(mode==='full'?1:0.0001, t, 0.35);
+    natureGain.gain.setTargetAtTime(mode==='off'?0.0001:1, t, 0.35);
+    sfxGain.gain.setTargetAtTime(mode==='off'?0.0001:0.9, t, 0.08);
+  }
+
+  function updateBtn(){
+    const b=document.getElementById('bgmbtn'); if(!b) return;
+    if(mode==='full'){ b.textContent='♫ 富林晨曲'; b.classList.add('bgm-on'); }
+    else if(mode==='nature'){ b.textContent='🐦 仅鸟鸣'; b.classList.add('bgm-on'); }
+    else { b.textContent='🔇 声音:关'; b.classList.remove('bgm-on'); }
+  }
+
+  function unlock(){
+    if(mode==='off') return;
+    if(!ensure()) return;
+    if(ac.state==='suspended') ac.resume().catch(()=>{});
+    if(!started){
+      started=true;
+      nextTime=ac.currentTime+0.08;
+      nextBirdTime=ac.currentTime+1.2;
+      timer=setInterval(schedule, 120);
+    }
+    applyGains();
+  }
+
+  function sfx(kind){
+    if(mode==='off') return;
+    unlock(); if(!ac) return;
+    const t=ac.currentTime;
+    try{
+      if(kind==='collect'||kind==='card'){
+        const notes=[69,72,77]; const f=m2f(notes[Math.floor(Math.random()*notes.length)]);
+        const o=ac.createOscillator(), g=ac.createGain();
+        o.type='sine'; o.frequency.setValueAtTime(f,t);
+        g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.06,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.35);
+        o.connect(g); route(g,0.28,sfxGain); o.start(t); o.stop(t+0.38);
+        if(Math.random()<0.45) chirpBird(t+0.08, 0, 0.55);
+      } else if(kind==='build'){
+        [60,65].forEach((m,i)=>{
+          const o=ac.createOscillator(), g=ac.createGain(), s=t+i*0.07;
+          o.type='triangle'; o.frequency.setValueAtTime(m2f(m),s);
+          g.gain.setValueAtTime(0.0001,s); g.gain.linearRampToValueAtTime(0.065,s+0.01); g.gain.exponentialRampToValueAtTime(0.0001,s+0.32);
+          o.connect(g); route(g,0.25,sfxGain); o.start(s); o.stop(s+0.35);
+        });
+      } else if(kind==='observe'){
+        [65,69,72,76,81].forEach((m,i)=>{
+          const o=ac.createOscillator(), g=ac.createGain(), s=t+i*0.065;
+          o.type='sine'; o.frequency.setValueAtTime(m2f(m),s);
+          g.gain.setValueAtTime(0.0001,s); g.gain.linearRampToValueAtTime(0.055,s+0.015); g.gain.exponentialRampToValueAtTime(0.0001,s+0.68);
+          o.connect(g); route(g,0.45,sfxGain); o.start(s); o.stop(s+0.72);
+        });
+        chirpBird(t+0.12, 1, 0.85);
+      } else if(kind==='win'||kind==='ach'){
+        [65,69,72,77,81,84].forEach((m,i)=>{
+          const o=ac.createOscillator(), g=ac.createGain(), s=t+i*0.08;
+          o.type='sine'; o.frequency.setValueAtTime(m2f(m),s);
+          g.gain.setValueAtTime(0.0001,s); g.gain.linearRampToValueAtTime(0.06,s+0.015); g.gain.exponentialRampToValueAtTime(0.0001,s+0.85);
+          o.connect(g); route(g,0.5,sfxGain); o.start(s); o.stop(s+0.9);
+        });
+      } else if(kind==='turn'){
+        const o=ac.createOscillator(), g=ac.createGain();
+        o.type='sine'; o.frequency.setValueAtTime(880,t);
+        g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.032,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.28);
+        o.connect(g); route(g,0.3,sfxGain); o.start(t); o.stop(t+0.3);
+      } else {
+        const o=ac.createOscillator(), g=ac.createGain();
+        o.type='sine'; o.frequency.setValueAtTime(520,t);
+        g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.03,t+0.005); g.gain.exponentialRampToValueAtTime(0.0001,t+0.06);
+        o.connect(g); g.connect(sfxGain); o.start(t); o.stop(t+0.07);
+      }
+    }catch(e){}
+  }
+
+  function toggle(){
+    mode = (mode==='full')?'nature':(mode==='nature'?'off':'full');
+    try{ localStorage.setItem(KEY, mode); }catch(e){}
+    updateBtn();
+    if(mode==='off'){ applyGains(); }
+    else { unlock(); if(mode==='nature') chirpBird(); else sfx('turn'); }
+  }
+
+  document.addEventListener('pointerdown', ()=>{ if(mode!=='off') unlock(); }, {passive:true});
+  document.addEventListener('keydown', ()=>{ if(mode!=='off') unlock(); }, {passive:true});
+  document.addEventListener('visibilitychange', ()=>{
+    if(!ac) return;
+    if(document.visibilityState==='hidden') ac.suspend().catch(()=>{});
+    else if(mode!=='off') ac.resume().catch(()=>{});
+  });
+  window.addEventListener('DOMContentLoaded', updateBtn);
+  return { toggle, sfx, unlock, chirpBird, getMode:()=>mode };
+})();
+
+/* ===================== 🎨 18 种鸟类水彩生态矢量插画 ===================== */
+const BIRD_ART={
+  yelu:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#dfecef"/><path d="M0 64 Q40 58 80 65 T120 62 V84 H0Z" fill="#bed9d4"/><line x1="53" y1="53" x2="51" y2="75" stroke="#c8a23e" stroke-width="2.6"/><line x1="63" y1="53" x2="65" y2="75" stroke="#c8a23e" stroke-width="2.6"/><ellipse cx="58" cy="46" rx="22" ry="13" fill="#c3cdd4"/><path d="M36 44 Q58 24 80 42 Q66 50 56 50 Q44 50 36 44Z" fill="#2c3540"/><path d="M64 24 Q60 15 51 16" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="72" cy="34" r="9" fill="#f3f6f8"/><path d="M65 27 Q73 24 78 32 L69 34Z" fill="#262c34"/><circle cx="74" cy="34" r="2.2" fill="#d0382a"/><path d="M79 34 L97 37 L79 39Z" fill="#25292e"/></svg>`,
+  banjiu:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#f4ede1"/><line x1="25" y1="64" x2="88" y2="62" stroke="#8c6e4b" stroke-width="4" stroke-linecap="round"/><ellipse cx="55" cy="48" rx="21" ry="13" fill="#cca98a"/><path d="M38 52 Q28 67 16 74 Q36 66 44 58Z" fill="#aa8769"/><circle cx="73" cy="36" r="10.5" fill="#9f9086"/><path d="M82 36 L93 38 L82 40Z" fill="#3a3634"/><circle cx="76" cy="34" r="2.1" fill="#261a12"/><path d="M60 44 Q67 55 75 51" stroke="#23201e" stroke-width="5" fill="none" stroke-linecap="round"/><g fill="#fff"><circle cx="63" cy="47" r="1.2"/><circle cx="67" cy="50" r="1.2"/><circle cx="71" cy="51" r="1.2"/></g></svg>`,
+  wudong:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#e8efe3"/><line x1="30" y1="66" x2="90" y2="66" stroke="#6f5a3e" stroke-width="3.6" stroke-linecap="round"/><ellipse cx="56" cy="48" rx="21" ry="13" fill="#222126"/><path d="M38 50 Q26 65 15 73 Q36 65 44 57Z" fill="#141416"/><circle cx="74" cy="36" r="10.5" fill="#27252b"/><path d="M83 35 L97 37 L83 40Z" fill="#f2a829"/><circle cx="77" cy="34" r="3.6" fill="none" stroke="#f2a829" stroke-width="1.5"/><circle cx="77" cy="34" r="1.7" fill="#000"/></svg>`,
+  bailu:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#dff0f2"/><path d="M0 64 Q45 59 85 65 T120 63 V84 H0Z" fill="#b4dce0"/><line x1="54" y1="52" x2="52" y2="76" stroke="#2c3336" stroke-width="2.4"/><line x1="62" y1="52" x2="64" y2="76" stroke="#2c3336" stroke-width="2.4"/><ellipse cx="56" cy="47" rx="20" ry="11.5" fill="#ffffff"/><path d="M68 45 Q69 27 78 21" stroke="#ffffff" stroke-width="8.5" fill="none" stroke-linecap="round"/><circle cx="79" cy="21" r="6.8" fill="#ffffff"/><path d="M72 17 Q62 12 56 17" stroke="#ffffff" stroke-width="2.2" fill="none"/><path d="M84 20 L102 22 L84 24Z" fill="#eab32e"/><circle cx="81" cy="20" r="1.7" fill="#1b2226"/></svg>`,
+  shaji:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#f7edd6"/><path d="M0 63 Q35 54 72 62 T120 59 V84 H0Z" fill="#e5ca91"/><ellipse cx="57" cy="49" rx="22" ry="13" fill="#d4a65e"/><ellipse cx="55" cy="54" rx="13" ry="5.5" fill="#3a2c22"/><path d="M36 47 L16 54 L36 53Z" fill="#b88844"/><circle cx="76" cy="37" r="9.5" fill="#dfb672"/><path d="M84 37 L92 38 L84 40Z" fill="#595048"/><circle cx="79" cy="35" r="1.8" fill="#221912"/><path d="M46 44 Q55 41 64 46" stroke="#855a2b" stroke-width="2" fill="none"/></svg>`,
+  shuiju:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#e2eef0"/><path d="M0 64 Q42 56 80 66 T120 62 V84 H0Z" fill="#9fb5ba"/><ellipse cx="58" cy="47" rx="19" ry="13" fill="#3e5f8e"/><path d="M40 51 Q30 66 22 76 Q42 67 48 58Z" fill="#c45032"/><circle cx="74" cy="36" r="10.5" fill="#35527c"/><path d="M83 36 L93 37 L83 39Z" fill="#1b1c1f"/><circle cx="77" cy="34" r="1.9" fill="#0d0e10"/><path d="M45 43 Q56 37 66 44" stroke="#284268" stroke-width="2.6" fill="none"/></svg>`,
+  hongsun:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#eef1e4"/><line x1="56" y1="62" x2="54" y2="76" stroke="#dfa818" stroke-width="2.8"/><line x1="65" y1="62" x2="67" y2="76" stroke="#dfa818" stroke-width="2.8"/><path d="M52 33 Q45 54 54 66 L68 66 Q75 50 68 33Z" fill="#b9723c"/><g fill="#5b3419"><circle cx="57" cy="42" r="1.5"/><circle cx="64" cy="41" r="1.5"/><circle cx="60" cy="49" r="1.5"/><circle cx="65" cy="48" r="1.5"/></g><path d="M54 66 Q61 78 67 66" fill="#777d87"/><circle cx="62" cy="27" r="10" fill="#828994"/><path d="M70 26 Q78 26 78 32 Q72 30 69 32Z" fill="#323842"/><path d="M58 31 L56 39" stroke="#28282c" stroke-width="2.4" stroke-linecap="round"/><circle cx="65" cy="26" r="2.1" fill="#16181c"/></svg>`,
+  maoying:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#eae6dc"/><ellipse cx="60" cy="48" rx="19" ry="20" fill="#9a7248"/><ellipse cx="60" cy="54" rx="12" ry="12" fill="#e6d3b3"/><path d="M54 48 L56 54 M60 47 L60 55 M66 48 L64 54" stroke="#755231" stroke-width="1.6"/><path d="M44 26 L49 18 L54 27 M66 27 L71 18 L76 26" fill="#805a35"/><ellipse cx="53" cy="34" rx="6.5" ry="6" fill="#f3e6cf"/><ellipse cx="67" cy="34" rx="6.5" ry="6" fill="#f3e6cf"/><circle cx="53" cy="34" r="3.4" fill="#e88a1e"/><circle cx="67" cy="34" r="3.4" fill="#e88a1e"/><circle cx="53" cy="34" r="1.7" fill="#111"/><circle cx="67" cy="34" r="1.7" fill="#111"/><path d="M58 37 L60 42 L62 37Z" fill="#46382b"/></svg>`,
+  daisheng:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#f3ebd9"/><line x1="28" y1="65" x2="90" y2="65" stroke="#7b5c38" stroke-width="3.4" stroke-linecap="round"/><ellipse cx="54" cy="49" rx="19" ry="12" fill="#cf8c4e"/><g><rect x="37" y="45" width="22" height="3.5" fill="#1f1e20"/><rect x="37" y="50" width="22" height="3.5" fill="#fff"/><rect x="37" y="55" width="18" height="3.5" fill="#1f1e20"/></g><circle cx="71" cy="36" r="8.8" fill="#d59454"/><path d="M61 30 L56 17 M65 28 L63 14 M70 28 L71 14 M75 30 L78 18" stroke="#cf8c4e" stroke-width="3" stroke-linecap="round"/><path d="M56 17 L55 15 M63 14 L63 12 M71 14 L71 12 M78 18 L79 16" stroke="#1c1c1e" stroke-width="2.8" stroke-linecap="round"/><path d="M79 37 Q93 38 101 48" stroke="#222" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="73" cy="35" r="1.8" fill="#1d150e"/></svg>`,
+  lvtouya:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#dcf0f5"/><path d="M0 57 H120 V84 H0Z" fill="#82c4dc"/><path d="M0 57 Q42 52 82 58 T120 56" fill="none" stroke="#b9e4f0" stroke-width="2.5"/><ellipse cx="52" cy="54" rx="25" ry="12" fill="#9ea6ad"/><path d="M28 52 Q18 47 16 54 Q23 58 32 56Z" fill="#777f86"/><path d="M56 48 Q60 39 70 39" stroke="#7d5330" stroke-width="9" fill="none" stroke-linecap="round"/><rect x="64" y="38" width="6" height="4" fill="#fff"/><circle cx="74" cy="34" r="9.5" fill="#1b7a4c"/><path d="M82 34 Q93 34 95 38 Q92 41 82 39Z" fill="#ebca3a"/><circle cx="77" cy="32" r="1.9" fill="#0d0e10"/></svg>`,
+  tiane:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#e1f2f5"/><path d="M0 58 H120 V84 H0Z" fill="#89c9db"/><path d="M0 58 Q38 53 76 59 T120 57" fill="none" stroke="#c3eaf3" stroke-width="2.5"/><ellipse cx="48" cy="54" rx="25" ry="12" fill="#ffffff"/><path d="M36 47 Q46 39 58 49" fill="#f3f8fa"/><path d="M64 52 Q76 44 74 26 Q73 18 82 19" stroke="#ffffff" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="83" cy="20" r="6.5" fill="#ffffff"/><path d="M88 20 L100 22 L88 24Z" fill="#232528"/><path d="M86 19 L92 20 L89 23 L85 22Z" fill="#f0bf2a"/><circle cx="85" cy="19" r="1.6" fill="#111"/></svg>`,
+  cuiniao:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#e0f2ef"/><path d="M0 64 Q45 58 90 65 T120 62 V84 H0Z" fill="#9cd2d6"/><line x1="24" y1="62" x2="78" y2="57" stroke="#7d5e3e" stroke-width="3.6" stroke-linecap="round"/><ellipse cx="52" cy="46" rx="16" ry="12" fill="#df7b35"/><path d="M38 42 Q52 28 70 39 Q60 50 42 50Z" fill="#1384a6"/><circle cx="67" cy="34" r="9.5" fill="#1692b6"/><ellipse cx="64" cy="40" rx="4.5" ry="3" fill="#ffffff"/><path d="M75 34 L98 37 L75 39Z" fill="#24292e"/><circle cx="70" cy="33" r="1.8" fill="#111"/></svg>`,
+  yuange:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#ebf0ef"/><line x1="28" y1="65" x2="90" y2="65" stroke="#85786a" stroke-width="3.4" stroke-linecap="round"/><ellipse cx="56" cy="49" rx="20" ry="13" fill="#909aa6"/><path d="M40 50 L62 46 M42 55 L64 51" stroke="#262a30" stroke-width="2.6" stroke-linecap="round"/><circle cx="74" cy="36" r="9.5" fill="#707b87"/><path d="M66 40 Q74 44 79 41" stroke="#579c7b" stroke-width="3.5" fill="none"/><path d="M82 36 L91 37 L82 39Z" fill="#30343a"/><circle cx="76" cy="34" r="1.8" fill="#d96b27"/></svg>`,
+  zhuhuan:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#f7ecec"/><path d="M0 64 Q40 59 80 65 T120 62 V84 H0Z" fill="#d0ded8"/><line x1="54" y1="53" x2="52" y2="75" stroke="#d4453d" stroke-width="2.4"/><line x1="63" y1="53" x2="65" y2="75" stroke="#d4453d" stroke-width="2.4"/><ellipse cx="56" cy="47" rx="21" ry="12" fill="#f7d7d9"/><path d="M44 43 Q58 38 72 47" stroke="#f0b6bc" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M67 44 Q71 29 79 26" stroke="#fff6f6" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="80" cy="26" r="6.8" fill="#d83f37"/><path d="M86 25 Q100 28 106 39" stroke="#2b2626" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="82" cy="25" r="1.6" fill="#181212"/></svg>`,
+  huangli:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#eef5e2"/><line x1="28" y1="64" x2="90" y2="62" stroke="#75613e" stroke-width="3.6" stroke-linecap="round"/><ellipse cx="55" cy="48" rx="20" ry="12" fill="#f3cc2e"/><path d="M36 47 Q46 54 58 51 L41 62Z" fill="#232220"/><circle cx="73" cy="35" r="9.8" fill="#f6d53b"/><path d="M62 31 Q72 26 81 34" stroke="#1e1d1c" stroke-width="4.2" fill="none" stroke-linecap="round"/><path d="M82 35 L94 37 L82 39Z" fill="#e26f5e"/><circle cx="76" cy="34" r="1.8" fill="#161412"/></svg>`,
+  tihu:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#e1f0f5"/><path d="M0 59 H120 V84 H0Z" fill="#89c3d8"/><ellipse cx="48" cy="54" rx="24" ry="13" fill="#fff7f0"/><path d="M64 49 Q70 30 75 26" stroke="#fff7f0" stroke-width="8.5" fill="none" stroke-linecap="round"/><circle cx="75" cy="25" r="7" fill="#fff7f0"/><path d="M80 24 L106 27 L80 28Z" fill="#e7a645"/><path d="M80 28 Q93 40 104 27 Z" fill="#f2b949"/><circle cx="77" cy="24" r="1.8" fill="#1e2226"/></svg>`,
+  yingwu:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#eaf5e6"/><line x1="30" y1="65" x2="88" y2="65" stroke="#785e3e" stroke-width="3.6" stroke-linecap="round"/><path d="M46 53 L20 75 L40 58Z" fill="#2b9d72"/><ellipse cx="56" cy="48" rx="16" ry="13" fill="#46b35f"/><circle cx="70" cy="34" r="10" fill="#c77a8a"/><path d="M61 39 Q68 44 77 41" stroke="#222a24" stroke-width="2.6" fill="none"/><path d="M78 33 Q86 33 85 40 Q80 39 78 37Z" fill="#e35642"/><circle cx="73" cy="33" r="1.9" fill="#1b1c1c"/></svg>`,
+  bolao:`<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid slice"><rect width="120" height="84" fill="#eef1ec"/><line x1="26" y1="65" x2="92" y2="63" stroke="#726452" stroke-width="3.4" stroke-linecap="round"/><path d="M40 52 L14 68 L44 56Z" fill="#282b30"/><ellipse cx="57" cy="48" rx="19" ry="12" fill="#bfc6cc"/><ellipse cx="59" cy="52" rx="14" ry="8" fill="#f6f7f8"/><circle cx="74" cy="35" r="9.6" fill="#a7b0b8"/><rect x="70" y="32" width="12" height="5" rx="2" fill="#1e2124"/><path d="M82 34 Q89 34 89 39 L82 38Z" fill="#2d3035"/><circle cx="76" cy="34" r="1.7" fill="#0d0e10"/></svg>`
+};
+function birdArt(k, cat){
+  if(BIRD_ART[k]) return BIRD_ART[k];
+  return '<svg viewBox="0 0 120 84"><rect width="120" height="84" fill="#ebf4ec"/><text x="60" y="52" text-anchor="middle" font-size="36">'+(CAT_ICON[cat]||'🐦')+'</text></svg>';
+}
+
+/* 景观的颜色/图标属于表现层，引擎不带这些，在这里定义 */
+const LAND={
+  '草地':{color:'#9ccc65',grad:'linear-gradient(155deg,#b5de7e,#7cb342)',icon:'🌿'},
+  '天空':{color:'#aee0f2',grad:'linear-gradient(155deg,#c9ecfa,#7fc4e3)',icon:'☁️'},
+  '湿地':{color:'#80cbc4',grad:'linear-gradient(155deg,#a2dcd6,#4da79d)',icon:'🌾'},
+  '沙地':{color:'#e6d3a3',grad:'linear-gradient(155deg,#f1e1b6,#cfa964)',icon:'🏜️'},
+  '树冠':{color:'#a5d6a7',grad:'linear-gradient(155deg,#bde5bf,#6aa96d)',icon:'🌳'},
+  '湖泊':{color:'#90caf9',grad:'linear-gradient(155deg,#b1dcff,#5ea5e6)',icon:'💧'},
+};
+const CAT_ICON={'涉禽':'🦩','陆禽':'🐓','鸣禽':'🐦','猛禽':'🦅','攀禽':'🪶','游禽':'🦆'};
+function lc(ls){ return LAND[ls]||{color:'#ddd',grad:'#ddd',icon:'❔'}; }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ---------------------------- 动画与视觉辅助 ---------------------------- */
+const ANIM={on:true};
+function flyEl(srcRect, dstEl, html, ms){
+  if(!ANIM.on || !srcRect || !dstEl) return;
+  try{
+    const dr=dstEl.getBoundingClientRect();
+    const c=document.createElement('div'); c.className='flycard';
+    c.style.left=srcRect.left+'px'; c.style.top=srcRect.top+'px';
+    c.innerHTML=html; document.body.appendChild(c);
+    c.style.transform='scale(1.08) translateY(-6px)';
+    c.style.transition='left '+ms+'ms cubic-bezier(.35,.06,.22,1), top '+ms+'ms cubic-bezier(.35,.06,.22,1), transform '+ms+'ms ease, opacity '+ms+'ms ease';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      c.style.left=(dr.left+Math.min(dr.width*0.4,40))+'px';
+      c.style.top=(dr.top+8)+'px';
+      c.style.transform='scale(0.85)'; c.style.opacity='0.88';
+    }));
+    setTimeout(()=>{ try{c.remove();}catch(e){} }, ms+60);
+  }catch(e){}
+}
+function observeAnim(txt){
+  if(!ANIM.on) return;
+  try{
+    document.querySelectorAll('.obs-ov').forEach(e=>e.remove());
+    const ov=document.createElement('div'); ov.className='obs-ov';
+    ov.innerHTML='<div class="iris"></div><div class="obs-label">🔭 '+(txt||'观鸟成功！')+'</div>';
+    document.body.appendChild(ov);
+    setTimeout(()=>{ try{ov.remove();}catch(e){} }, 1380);
+  }catch(e){}
+}
+function showPhaseBanner(html, cls){
+  if(!ANIM.on) return;
+  try{
+    document.querySelectorAll('.phasebanner').forEach(e=>e.remove());
+    const b=document.createElement('div'); b.className='phasebanner '+(cls||''); b.innerHTML=html;
+    document.body.appendChild(b);
+    setTimeout(()=>{ try{b.remove();}catch(e){} }, 1500);
+  }catch(e){}
+}
+
+/* 移动端长按卡牌放大预览 */
+(function(){
+  let timer=null, moved=false, sx=0, sy=0, suppress=false;
+  function findCard(el){ for(let n=el; n&&n!==document.body; n=n.parentNode){ if(n.classList && (n.classList.contains('card')||n.classList.contains('gcard'))) return n; } return null; }
+  function show(cardEl){
+    let ov=document.getElementById('cardpreview');
+    if(!ov){ ov=document.createElement('div'); ov.id='cardpreview'; ov.addEventListener('click',()=>{ ov.style.display='none'; }); document.body.appendChild(ov); }
+    const clone=cardEl.cloneNode(true); clone.classList.remove('mini','dim','gmuted'); clone.removeAttribute('onclick');
+    ov.innerHTML='<div class="pvbox"></div><div class="tip">点任意处关闭</div>';
+    ov.querySelector('.pvbox').appendChild(clone);
+    if(cardEl.dataset.sjBird){const note=document.createElement('p'); note.className='sj-preview-note'; note.textContent=Songjiang.birdNote(cardEl.dataset.sjBird); ov.querySelector('.tip').before(note);}
+    ov.style.display='flex';
+  }
+  document.addEventListener('touchstart',e=>{ const c=findCard(e.target); if(!c) return; moved=false; const t=e.touches[0]; sx=t.clientX; sy=t.clientY;
+    timer=setTimeout(()=>{ if(!moved){ suppress=true; show(c); } }, 380); },{passive:true});
+  document.addEventListener('touchmove',e=>{ const t=e.touches[0]; if(Math.abs(t.clientX-sx)>12||Math.abs(t.clientY-sy)>12){ moved=true; clearTimeout(timer); } },{passive:true});
+  document.addEventListener('touchend',()=>{ clearTimeout(timer); },{passive:true});
+  document.addEventListener('click',e=>{ if(suppress){ suppress=false; e.stopPropagation(); e.preventDefault(); } }, true);
+})();
+
+/* ---------------------------- 卡面渲染 ---------------------------- */
+function birdCard(k,o){
+  o=o||{};
+  if(k==='?') return '<div class="card back'+(o.mini?' mini':'')+'"><div class="art">🂠</div><div class="nm">手牌</div></div>';
+  const sp=S[k]; if(!sp) return '';
+  const cls=['card']; if(o.mini)cls.push('mini'); if(o.clk)cls.push('clk');
+  if(o.legal)cls.push('legal'); if(o.sel)cls.push('sel'); if(o.dim)cls.push('dim');
+  return '<div class="'+cls.join(' ')+'"'+(o.id?' id="'+o.id+'"':'')+(o.onclick?' onclick="'+o.onclick+'"':'')
+    +' data-sj-bird="'+esc(k)+'" title="'+esc(sp.name+' · '+sp.cat+'｜牌面景观 '+sp.hab.join('/')+'｜'+Songjiang.birdNote(k))+'">'
+    +'<div class="catpill">'+sp.cat.slice(0,1)+'</div>'
+    +'<div class="art">'+birdArt(k,sp.cat)+'</div>'
+    +'<div class="nm">'+esc(sp.name)+'</div>'
+    +'<div class="habs">'+sp.hab.map(h=>'<div class="hdot" style="background:'+lc(h).color+'" title="'+h+'">'+h+'</div>').join('')+'</div>'
+    +'</div>';
+}
+function landCard(ls,o){
+  o=o||{}; const d=lc(ls);
+  const cls=['lcard']; if(o.clk)cls.push('clk'); if(o.legal)cls.push('legal'); if(o.sel)cls.push('sel');
+  return '<div class="'+cls.join(' ')+'" style="background:'+d.grad+'"'+(o.onclick?' onclick="'+o.onclick+'"':'')+' title="'+esc(ls)+'">'
+    +'<div class="ic">'+d.icon+'</div><div class="ln">'+ls+'</div><div class="sj-site-tag">'+Songjiang.place(ls).short+'</div>'
+    +(o.pts?'<div class="gp">'+o.pts+' 分</div>':'')
+    +(o.cnt?'<div class="cnt">'+o.cnt+'</div>':'')+'</div>';
+}
+function reqText(req){ return Object.keys(req).map(c=>c+'×'+req[c]).join(' ＋ '); }
+function guideCard(g,o){
+  o=o||{};
+  const cls=['gcard']; if(g.lvl===2)cls.push('lv2'); if(o.clk)cls.push('clk');
+  if(o.legal)cls.push('legal'); if(o.dim)cls.push('dim'); if(o.muted)cls.push('gmuted');
+  return '<div class="'+cls.join(' ')+'"'+(o.onclick?' onclick="'+o.onclick+'"':'')+' title="'+esc(g.name+'（'+g.pts+'分）｜需：'+reqText(g.req)+'｜保留 1 只'+g.keep)+'">'
+    +'<div class="gh"><span>'+lc(g.ls).icon+' '+g.ls+'</span><span class="pts">'+g.pts+'分</span></div>'
+    +'<div class="sj-guide-place">'+Songjiang.place(g.ls).short+'</div><div class="req">需：'+reqText(g.req)+'</div>'
+    +'<div class="keep">观鸟保留 1 '+g.keep+'</div>'
+    +(o.prog?'<div class="gprog '+(o.progCls||'')+'">'+o.prog+'</div>':'')
+    +'</div>';
+}
+
+/* ---------------------------- 全局 UI 状态 ---------------------------- */
+const UI={
+  state:null, online:false, net:null, accessKey:null,
+  phase:'setup',          // setup | play | wait | over
+  build:null,             // 构建向导：{step:'bird',src} | {step:'target',src,hand} | {step:'birds',group,hab,picks:[]}
+  swap:null,              // 采集 2 换 1：{market:[], hand:null}
+  obGroup:null,           // 观鸟时选中的群落
+  guideFilter:false,      // 是否只高亮可拿/差1只的图鉴
+  humanSeat:0,
+  _lastPh:undefined, _lastRd:undefined, _wasMyTurn:false,
+};
+
+UI.boot=function(){ Songjiang.home(); };
+UI.toggleAnim=function(){
+  ANIM.on=!ANIM.on;
+  const b=document.getElementById('animbtn');
+  if(b) b.textContent='🎬 动画:'+(ANIM.on?'开':'关');
+  BGM.sfx('tap');
+};
+UI.toggleGuideFilter=function(){
+  UI.guideFilter=!UI.guideFilter;
+  const b=document.getElementById('gfilterbtn');
+  if(b) b.classList.toggle('on', UI.guideFilter);
+  BGM.sfx('tap');
+  renderPools();
+};
+
+/* ---------------------------- 设置 ---------------------------- */
+UI.openSetup=function(){ Songjiang.setup(); };
+UI.startLocal=function(){
+  const names=['你'], cpu=[false], styles=['balance'];
+  for(let i=1;i<4;i++){
+    const k=document.getElementById('k'+i); if(!k||k.value!=='cpu') break;
+    const st=document.getElementById('s'+i).value;
+    names.push(Songjiang.persona(st).name); cpu.push(true); styles.push(st);
+  }
+  if(names.length<2){ flash('至少需要 2 名玩家'); return; }
+  Songjiang.enterBoard();
+  const dko=document.getElementById('dko');
+  const stretch=document.getElementById('stretch');
+  UI.state=G.newGame({names,cpu,styles,seed:Math.floor(Math.random()*0x100000000),deckOutEnd:!dko||dko.checked,extraPack:(!stretch||stretch.checked)?'stretch':null});
+  G.autoDraft(UI.state);
+  G.lg(UI.state,'—— 第 1 轮 ——');
+  UI.humanSeat=0; UI.online=false; UI.phase='play'; UI.resetSel();
+  UI._lastPh=undefined; UI._lastRd=undefined; UI._wasMyTurn=false;
+  BGM.sfx('turn');
+  clearOverlay(); pump();
+};
+UI.resetSel=function(){ UI.build=null; UI.swap=null; UI.obGroup=null; };
+
+/* ---------------------------- 动作发送 ---------------------------- */
+function meSeat(){ return UI.online ? (UI.net?UI.net.seat:0) : UI.humanSeat; }
+function myTurn(){
+  const st=UI.state; if(!st||st.gameOver) return false;
+  if(UI.online) return st.cur===UI.net.seat && !(st.seats&&st.seats[UI.net.seat]&&st.seats[UI.net.seat].cpu);
+  return st.cur===UI.humanSeat;
+}
+function myP(){ const st=UI.state; return st?st.players[meSeat()]:null; }
+
+/* 唯一的动作出口。联机 → 发给服务器；单机 → 直接调引擎。
+   两边动作名与参数完全一致（见 server/hub-v6.js 的 ACT_OK）。 */
+function send(a){
+  if(a.type==='collectOne'||a.type==='collectTwo') BGM.sfx('collect');
+  else if(a.type==='buildHabitat'||a.type==='buildBirds') BGM.sfx('build');
+  else if(a.type==='obTake'){ BGM.sfx('observe'); observeAnim('观鸟拿取图鉴！'); }
+  else if(a.type==='obTakeAch') BGM.sfx('ach');
+  else if(a.type==='endTurn'||a.type==='obFinish') BGM.sfx('tap');
+
+  if(UI.online){ UI.emit(a); UI.resetSel(); return; }
+  const st=UI.state; let r;
+  try{
+    switch(a.type){
+      case 'collectOne':   r=G.collectOne(st,a.i); break;
+      case 'collectTwo':   r=G.collectTwo(st,a.i,a.j,a.drop); break;
+      case 'buildHabitat': r=G.buildHabitat(st,a.src,a.hand,(a.group==null?null:a.group)); break;
+      case 'buildBirds':   r=G.buildBirds(st,a.group,a.hab,a.hands); break;
+      case 'endTurn':      r=G.endTurn(st); break;
+      case 'obTake':       r=G.obTake(st,a.group,a.lvl,a.i,a.keep); break;
+      case 'obTakeAch':    r=G.obTakeAch(st,a.id); break;
+      case 'obFinish':     r=G.obFinish(st,!!a.declare); break;
+      default: r={ok:false,err:'未知动作'};
+    }
+  }catch(e){ flash('非法操作'); UI.resetSel(); render(); return; }
+  if(!r||!r.ok){ flash((r&&r.err)||'非法操作'); UI.resetSel(); render(); return; }
+  UI.resetSel();
+  if(a.type==='endTurn'||a.type==='obFinish') pump(); else { render(); }
+}
+
+/* 单机：把电脑座位一路走完，直到轮到人类或对局结束 */
+function pump(){
+  const st=UI.state;
+  if(!st) return;
+  if(st.gameOver){ UI.phase='over'; render(); renderGameOver(); return; }
+  if(st.players[st.cur].isCPU){
+    UI.phase='wait'; render();
+    setTimeout(function(){ if(!UI.state||UI.state!==st) return; const actor=st.players[st.cur]; const before=Songjiang.beforeTurn(st,actor); G.cpuTurn(st); Songjiang.comment(st,actor,before); pump(); }, CPU_DELAY);
+    return;
+  }
+  UI.phase='play'; render();
+}
+
+/* ---------------------------- 玩家操作 ---------------------------- */
+UI.clickMarket=function(i){
+  if(!myTurn()) return;
+  const st=UI.state;
+  if(st.phase!=='play'){ flash('现在是观鸟阶段'); return; }
+  if(st._collected){ flash('本回合已经采集过了'); return; }
+  if(UI.swap){
+    const m=UI.swap.market, at=m.indexOf(i);
+    if(at>=0) m.splice(at,1); else if(m.length<2) m.push(i); else { m.shift(); m.push(i); }
+    BGM.sfx('tap'); render(); return;
+  }
+  const el=document.getElementById('mk'+i), sr=el?el.getBoundingClientRect():null, card=st.market[i];
+  send({type:'collectOne', i:i});
+  if(sr && card) flyEl(sr, document.getElementById('handpool'), birdCard(card,{}), 380);
+};
+UI.toggleSwap=function(){
+  if(!myTurn()) return;
+  const st=UI.state;
+  if(st._collected){ flash('本回合已经采集过了'); return; }
+  UI.swap = UI.swap ? null : {market:[], hand:null};
+  UI.build=null; BGM.sfx('tap'); render();
+};
+UI.clickHand=function(i){
+  if(!myTurn()) return;
+  const st=UI.state;
+  if(UI.swap){ UI.swap.hand = (UI.swap.hand===i? null : i); BGM.sfx('tap'); render(); return; }
+  if(UI.build && UI.build.step==='bird'){ UI.build={step:'target', src:UI.build.src, hand:i}; BGM.sfx('tap'); render(); return; }
+  if(UI.build && UI.build.step==='birds'){
+    const p=UI.build.picks, at=p.indexOf(i);
+    if(at>=0) p.splice(at,1);
+    else {
+      const hab=myP().groups[UI.build.group].habs[UI.build.hab];
+      const room=G.SEG_CAP-hab.birds.length;
+      if(p.length>=Math.min(2,room)) p.shift();
+      p.push(i);
+    }
+    BGM.sfx('tap'); render(); return;
+  }
+  flash('先选一张景观（或点群落里的空位）再选鸟');
+};
+UI.doSwap=function(){
+  const s=UI.swap; if(!s||s.market.length!==2||s.hand==null) return;
+  send({type:'collectTwo', i:s.market[0], j:s.market[1], drop:s.hand});
+};
+// 选一张景观来源（普通景观 或 储备区图鉴）
+UI.pickSrc=function(kind, key){
+  if(!myTurn()) return;
+  const st=UI.state;
+  if(st.phase!=='play'){ flash('现在是观鸟阶段'); return; }
+  if(!st._collected && G.canCollect(st)){ flash('请先完成采集，再进行构建'); return; }
+  if(st._built){ flash('本回合已经构建过了'); return; }
+  UI.swap=null;
+  const src = (kind==='plain') ? {plain:key} : {reserve:key};
+  UI.build={step:'bird', src:src};
+  BGM.sfx('tap'); render();
+};
+// 选落点：新群落 / 扩建第 groupIdx 个群落
+UI.pickTarget=function(groupIdx){
+  const b=UI.build; if(!b||b.step!=='target') return;
+  const p=myP(), card=p&&p.hand?p.hand[b.hand]:null, hel=document.getElementById('hb'+b.hand), sr=hel?hel.getBoundingClientRect():null;
+  send({type:'buildHabitat', src:b.src, hand:b.hand, group:groupIdx});
+  if(sr && card) flyEl(sr, document.getElementById('mygroups'), birdCard(card,{mini:true}), 360);
+};
+// 点群落里某个栖息地的空位 → 进入放鸟
+UI.pickHab=function(gi,hi){
+  if(!myTurn()) return;
+  const st=UI.state;
+  if(st.phase!=='play'){ flash('现在是观鸟阶段'); return; }
+  if(!st._collected && G.canCollect(st)){ flash('请先完成采集，再进行构建'); return; }
+  if(st._built){ flash('本回合已经构建过了'); return; }
+  UI.swap=null; UI.build={step:'birds', group:gi, hab:hi, picks:[]};
+  BGM.sfx('tap'); render();
+};
+UI.doPlaceBirds=function(){
+  const b=UI.build; if(!b||b.step!=='birds'||!b.picks.length) return;
+  const p=myP(), first=b.picks[0], card=p&&p.hand?p.hand[first]:null, hel=document.getElementById('hb'+first), sr=hel?hel.getBoundingClientRect():null;
+  send({type:'buildBirds', group:b.group, hab:b.hab, hands:b.picks.slice()});
+  if(sr && card) flyEl(sr, document.getElementById('mygroups'), birdCard(card,{mini:true}), 360);
+};
+UI.cancelBuild=function(){ UI.resetSel(); BGM.sfx('tap'); render(); };
+UI.endTurn=function(){ if(!myTurn()) return; send({type:'endTurn'}); };
+
+/* 观鸟 */
+UI.pickGroup=function(gi){ if(!myTurn()) return; UI.obGroup = (UI.obGroup===gi? null : gi); BGM.sfx('tap'); render(); };
+UI.takeGuide=function(lvl,i){
+  if(!myTurn()) return;
+  const st=UI.state;
+  if(st.phase!=='observe'){ flash('还没到观鸟阶段'); return; }
+  if(st.obTaken){ flash('本轮已经观鸟拿卡了'); return; }
+  const p=myP();
+  const pool = lvl===1? st.pool1 : st.pool2;
+  const g=pool[i]; if(!g) return;
+  // 找出哪些群落满足它
+  const okGroups=[];
+  p.groups.forEach((gr,gi)=>{ if(G.guideMetGroup(g,gr)) okGroups.push(gi); });
+  if(!okGroups.length){ flash('你没有任何鸟类群落满足这张图鉴的条件'); return; }
+  if(UI.obGroup!=null && okGroups.indexOf(UI.obGroup)>=0){ BGM.sfx('tap'); UI.openKeepChoice(UI.obGroup,lvl,i); return; }
+  if(okGroups.length===1){ BGM.sfx('tap'); UI.openKeepChoice(okGroups[0],lvl,i); return; }
+  UI.obGroup=null; flash('有 '+okGroups.length+' 个群落都满足 —— 先点选要用哪个群落观鸟（观鸟会归还该群落的鸟）');
+  render();
+};
+UI.openKeepChoice=function(group,lvl,i){
+  const st=UI.state,p=myP(),gr=p.groups[group],pool=lvl===1?st.pool1:st.pool2,g=pool[i];
+  if(!gr||!g) return;
+  const quota=G.keepQuota(p,g);
+  let rows='';
+  gr.habs.forEach((h,hi)=>h.birds.forEach((k,bi)=>{
+    const sp=G.SPECIES[k]; if(!sp||!quota[sp.cat]) return;
+    rows+='<div class="setrow" style="align-items:center;border-bottom:1px solid #e8eee6;padding:7px 0">'
+      +'<label style="display:flex;align-items:center;gap:7px;min-width:190px"><input class="keepbird" type="checkbox"'
+      +' data-hab="'+hi+'" data-bird="'+bi+'" data-cat="'+esc(sp.cat)+'">'
+      +esc(sp.name)+'（'+esc(sp.cat)+'，第 '+(hi+1)+' 个栖息地）</label>'
+      +(hi>0?'<span class="hint">必须收回手牌</span>'
+        :'<select class="keepdest"><option value="stay">留在原位</option><option value="hand">收回手牌</option></select>')
+      +'</div>';
+  }));
+  const limits=Object.keys(quota).filter(c=>quota[c]>0).map(c=>c+'最多 '+quota[c]+' 只').join('，');
+  document.getElementById('overlay').innerHTML='<div class="overlay"><div class="modal"><h2>🔭 选择保留的鸟</h2>'
+    +'<p>你将拿取图鉴【'+esc(g.name)+'】。请选择要保留的鸟；未选择的鸟会回到公共弃牌区。</p>'
+    +'<p class="hint">保留名额：'+esc(limits||'无')+'。第 1 个栖息地的保留鸟可留在原位或收回手牌；第 2 个必须收回手牌。</p>'
+    +(rows||'<p class="hint">这个群落里没有符合保留名额的鸟。</p>')
+    +'<p id="keeperr" style="color:#b23b2b"></p><div style="text-align:right;margin-top:12px">'
+    +'<button class="ghost" onclick="clearOverlay()">取消</button> '
+    +'<button class="big" onclick="UI.confirmKeep('+group+','+lvl+','+i+')">确认观鸟</button></div></div></div>';
+};
+UI.confirmKeep=function(group,lvl,i){
+  const p=myP(),pool=lvl===1?UI.state.pool1:UI.state.pool2,g=pool[i]; if(!g) return;
+  const quota=G.keepQuota(p,g), used={}, keep=[];
+  document.querySelectorAll('.keepbird:checked').forEach(cb=>{
+    const cat=cb.dataset.cat, row=cb.closest('.setrow'), dest=row&&row.querySelector('.keepdest');
+    used[cat]=(used[cat]||0)+1;
+    keep.push({hab:Number(cb.dataset.hab),bird:Number(cb.dataset.bird),toHand:Number(cb.dataset.hab)>0||!!(dest&&dest.value==='hand')});
+  });
+  const over=Object.keys(used).find(c=>used[c]>(quota[c]||0));
+  if(over){ const e=document.getElementById('keeperr'); if(e)e.textContent=over+'最多只能保留 '+quota[over]+' 只'; return; }
+  clearOverlay(); send({type:'obTake',group:group,lvl:lvl,i:i,keep:keep});
+};
+UI.takeAch=function(id){ if(!myTurn()) return; send({type:'obTakeAch', id:id}); };
+UI.obFinish=function(declare){ if(!myTurn()) return; send({type:'obFinish', declare:!!declare}); };
+
+/* ---------------------------- 渲染 ---------------------------- */
+function clearOverlay(){ document.getElementById('overlay').innerHTML=''; }
+function flash(m){
+  const h=document.getElementById('hint');
+  if(!h) return;
+  h.textContent='⚠️ '+m; h.style.color='#c1572f';
+  setTimeout(()=>{ h.style.color=''; },2400);
+}
+function render(){
+  const st=UI.state; if(!st) return;
+  if(!st.gameOver){
+    if(UI._lastPh===undefined){ UI._lastPh=st.phase; UI._lastRd=st.round; }
+    else {
+      if(st.phase==='observe' && UI._lastPh!=='observe') showPhaseBanner('🔭 观鸟阶段<span class="sub">按顺位检视群落，满足条件即可拿取图鉴</span>','ob');
+      else if(st.round!==UI._lastRd) showPhaseBanner('🌅 第 '+st.round+' 轮<span class="sub">松江印象 · 新一轮采集与构建</span>','');
+      UI._lastPh=st.phase; UI._lastRd=st.round;
+    }
+    const nowMine=myTurn();
+    if(nowMine && !UI._wasMyTurn) BGM.sfx('turn');
+    UI._wasMyTurn=nowMine;
+  }
+  renderGoal(); renderHud(); renderScore(); renderMarket(); renderPools(); renderAch();
+  renderMine(); renderOpps(); renderBar(); renderLog(); renderHot();
+}
+function renderHot(){
+  document.querySelectorAll('.zone-hot').forEach(e=>e.classList.remove('zone-hot'));
+  const st=UI.state; if(!st || st.gameOver || !myTurn()) return;
+  const p=myP(), b=UI.build;
+  if(st.phase==='play'){
+    if(UI.swap){ ['market','handpool'].forEach(id=>{ const e=document.getElementById(id); if(e) e.classList.add('zone-hot'); }); return; }
+    if(b && (b.step==='bird'||b.step==='birds')){ const e=document.getElementById('handpool'); if(e) e.classList.add('zone-hot'); return; }
+    if(b && b.step==='target'){ const e=document.getElementById('mygroups'); if(e) e.classList.add('zone-hot'); return; }
+    if(!st._collected && G.canCollect(st)){ const e=document.getElementById('market'); if(e) e.classList.add('zone-hot'); }
+    else if(!st._built && G.canBuild(p)){
+      if(p.plain.length){ const e=document.getElementById('plainpool'); if(e) e.classList.add('zone-hot'); }
+      if(p.reserve.length){ const e=document.getElementById('reservepool'); if(e) e.classList.add('zone-hot'); }
+    }
+  } else if(st.phase==='observe' && !st.obTaken){
+    const opts=G.observableOptions(st,p);
+    if(opts.length){
+      const multi=p.groups.filter(gr=>st.pool1.concat(st.pool2).some(g=>G.guideMetGroup(g,gr))).length>1;
+      if(multi && UI.obGroup==null){ const e=document.getElementById('mygroups'); if(e) e.classList.add('zone-hot'); }
+      else { ['pool1','pool2'].forEach(id=>{ const e=document.getElementById(id); if(e) e.classList.add('zone-hot'); }); }
+    }
+  }
+}
+function renderGoal(){
+  const st=UI.state, me=meSeat();
+  const sc=G.currentScore(st,me);
+  document.getElementById('progbar').style.width=Math.max(0,Math.min(100,sc/G.WIN_SCORE*100))+'%';
+  document.getElementById('progtxt').textContent=sc+' / '+G.WIN_SCORE;
+}
+function renderHud(){
+  const st=UI.state, el=document.getElementById('roundhud');
+  el.style.display='';
+  const seats=st.players.map((p,i)=>'<span class="seat'+(i===st.cur?' now':'')+'">'
+    +(p.isCPU?'🤖':'🧑')+' '+esc(st.names?st.names[i]:p.name)+'</span>').join(' ');
+  el.innerHTML='<span class="rnd">第 '+st.round+' 轮</span>'
+    +'<span class="stage'+(st.phase==='play'?' on':'')+'">🎴 行动</span>'
+    +'<span class="stage'+(st.phase==='observe'?' on':'')+'">🔭 观鸟</span>'
+    +'<span class="spacer"></span>'+seats
+    +'<span class="spacer"></span><span class="hint">牌堆 '+(st.deckCount!=null?st.deckCount:st.deck.length)
+    +' · 弃牌 '+(st.discardCount!=null?st.discardCount:st.discard.length)+'</span>';
+}
+function renderScore(){
+  const st=UI.state;
+  document.getElementById('scoreboard').innerHTML=st.players.map((p,i)=>{
+    const played=G.allHabs(p).filter(h=>h.guide).length;
+    return '<div class="pchip'+(i===st.cur?' active':'')+'">'
+      +'<div class="nm">'+(p.isCPU?'🤖':'🧑')+' '+esc(st.names?st.names[i]:p.name)
+        +(i===meSeat()?'<span class="tag">你</span>':'')+'</div>'
+      +'<div class="sc">'+G.currentScore(st,i)+'</div>'
+      +'<div class="det">图鉴打出 '+played+' 张 · 储备 '+p.reserve.length+' 张（终局每张 −1）</div>'
+      +'<div class="det">群落 '+p.groups.length+' 个 · 手牌 '+p.hand.length+' 张'
+        +(p.ach!=null?' · 成就'+p.ach:'')+'</div>'
+      +'</div>';
+  }).join('');
+}
+function renderMarket(){
+  const st=UI.state, mine=myTurn()&&st.phase==='play'&&!st._collected;
+  document.getElementById('market').innerHTML=st.market.map((k,i)=>{
+    const sel=UI.swap && UI.swap.market.indexOf(i)>=0;
+    return birdCard(k,{id:'mk'+i,clk:mine,legal:mine&&!UI.swap,sel:sel,onclick:'UI.clickMarket('+i+')'});
+  }).join('') || '<span class="hint">展示区已空</span>';
+}
+// 图鉴进度徽章：以「我最接近的那个群落」为准
+function guideProgress(g,p){
+  let best=null;
+  p.groups.forEach((gr,gi)=>{
+    let gap=0; for(const c in g.req) gap+=Math.max(0,g.req[c]-G.groupCat(gr,c));
+    if(best===null||gap<best.gap) best={gap:gap,gi:gi};
+  });
+  if(!best) return {txt:'还没有群落',cls:'',gap:99};
+  if(best.gap===0) return {txt:'✔ 群落'+(best.gi+1)+' 可拿',cls:'ok',gap:0};
+  return {txt:'群落'+(best.gi+1)+' 还差 '+best.gap+' 只',cls:best.gap<=1?'near':'',gap:best.gap};
+}
+function renderPools(){
+  const st=UI.state, p=myP();
+  const canTake = myTurn() && st.phase==='observe' && !st.obTaken;
+  let readyCnt=0, nearCnt=0;
+  function row(pool,lvl,el){
+    document.getElementById(el).innerHTML=pool.map((g,i)=>{
+      const pr=guideProgress(g,p);
+      if(pr.gap===0) readyCnt++; else if(pr.gap===1) nearCnt++;
+      const met = p.groups.some(gr=>G.guideMetGroup(g,gr));
+      const usable = canTake && met && (UI.obGroup==null || G.guideMetGroup(g,p.groups[UI.obGroup]));
+      const muted = UI.guideFilter && pr.gap>1;
+      return guideCard(g,{clk:canTake&&met, legal:usable, dim:canTake&&!met, muted:muted,
+        prog:pr.txt, progCls:pr.cls, onclick:'UI.takeGuide('+lvl+','+i+')'});
+    }).join('') || '<span class="hint">本级图鉴已被拿完</span>';
+  }
+  row(st.pool1,1,'pool1'); row(st.pool2,2,'pool2');
+  const sum=document.getElementById('guidesummary');
+  if(sum) sum.textContent = (readyCnt||nearCnt) ? ('✔ 可拿 '+readyCnt+' · 差1只 '+nearCnt) : '尚无接近达标的图鉴';
+}
+function renderAch(){
+  const st=UI.state, p=myP();
+  const canTake = myTurn() && st.phase==='observe' && p.ach==null;
+  document.getElementById('achs').innerHTML=G.ACH.map(a=>{
+    const slot=st.achPool.find(x=>x.id===a.id);
+    const taken=!slot||slot.taken;
+    const met=!taken&&G.achMet(p,a);
+    return '<div class="achcard'+(taken?' taken':'')+(canTake&&met?' legal':'')+'"'
+      +(canTake&&met?' onclick="UI.takeAch('+a.id+')"':'')+'>'
+      +'<div class="p">'+a.pts+'</div><div class="id">'+Songjiang.stamp(a.id)+(taken?'（已领）':'')+'</div>'
+      +'<div class="tx">'+Object.keys(a.req).map(L=>lc(L).icon+L+'×'+a.req[L]).join(' ')+'</div>'
+      +(met?'<div class="tx" style="color:#2c6e36;font-weight:700">✔ 你已达成，可拿</div>':'')
+      +'</div>';
+  }).join('');
+}
+/* 我的桌面：手牌 / 普通景观 / 储备图鉴 / 鸟类群落 */
+function renderMine(){
+  const st=UI.state, p=myP(), me=meSeat();
+  document.getElementById('mytitle').textContent='你的桌面（'+esc(st.names?st.names[me]:p.name)+'）';
+  const b=UI.build;
+  const playing = myTurn() && st.phase==='play';
+  const building = playing && (st._collected || !G.canCollect(st));
+  let h='';
+
+  /* 普通景观 + 储备图鉴 */
+  h+='<div class="row" style="align-items:flex-start;gap:20px">';
+  h+='<div><div class="lab">🗺️ 未打出的普通景观（起手 2 张，游戏中不补充）</div><div class="row" id="plainpool">';
+  h+= p.plain.length ? p.plain.map(L=>landCard(L,{clk:building&&!st._built,
+        legal:building&&!st._built, sel:!!(b&&b.src&&b.src.plain===L),
+        onclick:'UI.pickSrc(\'plain\',\''+L+'\')'})).join('')
+      : '<span class="hint">已全部打出</span>';
+  h+='</div></div>';
+  h+='<div><div class="lab">📥 储备区图鉴（打出才计分，终局每张 −1）</div><div class="row" id="reservepool">';
+  h+= p.reserve.length ? p.reserve.map((g,i)=>landCard(g.ls,{pts:g.pts, clk:building&&!st._built,
+        legal:building&&!st._built, sel:!!(b&&b.src&&b.src.reserve===i),
+        onclick:'UI.pickSrc(\'reserve\','+i+')'})).join('')
+      : '<span class="hint">空</span>';
+  h+='</div></div></div>';
+
+  /* 鸟类群落 */
+  h+='<div class="lab" style="margin-top:12px">🪺 我的鸟类群落　<span class="hint">'
+    +'一个群落最多 2 个栖息地；每个栖息地 1 张景观 + 最多 '+G.SEG_CAP+' 只鸟；'
+    +'开建右边那个之后，就不能再往左边放鸟（直到对这个群落观鸟）</span></div>';
+  h+='<div class="groups" id="mygroups">';
+  p.groups.forEach((gr,gi)=>{
+    const met = st.pool1.concat(st.pool2).some(g=>G.guideMetGroup(g,gr));
+    const cls=['group']; if(met)cls.push('metgd'); if(UI.obGroup===gi)cls.push('sel');
+    h+='<div class="'+cls.join(' ')+'"'
+      + (st.phase==='observe'&&myTurn()? ' onclick="UI.pickGroup('+gi+')" style="cursor:pointer"':'') +'>';
+    const cnt=G.CATS.map(c=>{const n=G.groupCat(gr,c); return n?c.slice(0,1)+n:null;}).filter(Boolean).join(' ');
+    h+='<div class="ghd"><b>群落 '+(gi+1)+'</b><span>'+(cnt||'（空）')+'</span>'
+      +(met?'<span style="color:#2c6e36;font-weight:700">🔭 有图鉴可拿</span>':'')+'</div>';
+    h+='<div class="habs2">';
+    gr.habs.forEach((hab,hi)=>{
+      const closed = hi<gr.fillFrom;
+      h+='<div class="hab'+(closed?' closed':'')+'" title="'+(closed?'已封闭：开建右侧后不能回头':'')+'">';
+      h+=landCard(hab.ls,{pts:hab.guide?hab.guide.pts:0});
+      h+='<div class="bslots">';
+      hab.birds.forEach(k=>{ h+=birdCard(k,{mini:true}); });
+      const room=G.SEG_CAP-hab.birds.length;
+      if(room>0){
+        const can = building && !st._built && !closed;
+        const isSel = b&&b.step==='birds'&&b.group===gi&&b.hab===hi;
+        h+='<div class="slot'+(can?' clk':'')+'"'+(can?' onclick="UI.pickHab('+gi+','+hi+')"':'')+'>'
+          +(isSel?'选鸟中':(closed?'已封闭':'空 '+room+' 位'))+'</div>';
+      }
+      h+='</div></div>';
+    });
+    // 扩建第 2 个栖息地
+    if(gr.habs.length<G.HAB_CAP){
+      const canExpand = b&&b.step==='target' && gr.habs[gr.habs.length-1].birds.length>0;
+      h+='<div class="addhab'+(canExpand?' clk':'')+'"'+(canExpand?' onclick="UI.pickTarget('+gi+')"':'')+'>'
+        +(canExpand?'＋ 建在这里':'第 2 个<br>栖息地')+'</div>';
+    }
+    h+='</div></div>';
+  });
+  // 新建群落
+  if(b&&b.step==='target'){
+    h+='<div class="newgroup clk" onclick="UI.pickTarget(null)">＋<br>开一个<br>新群落</div>';
+  } else if(!p.groups.length){
+    h+='<div class="newgroup">先选一张景观<br>再选一只鸟<br>就能开第一个群落</div>';
+  }
+  h+='</div>';
+
+  /* 手牌 */
+  const needBird = !!(b&&(b.step==='bird'||b.step==='birds')) || !!(UI.swap);
+  h+='<div class="lab" style="margin-top:12px">🖐️ 手牌（'+p.hand.length+' 张）'
+    +(needBird?'　<b style="color:#3a7d44">← 请从这里选鸟</b>':'')+'</div><div class="row" id="handpool">';
+  h+= p.hand.map((k,i)=>{
+    let legal=false, sel=false, dim=false;
+    if(UI.swap){ legal=true; sel=UI.swap.hand===i; }
+    else if(b&&b.step==='bird'){ const ls=b.src.plain||p.reserve[b.src.reserve].ls;
+      legal=G.birdLegal(k,ls); dim=!legal; }
+    else if(b&&b.step==='target'){ sel=(b.hand===i); dim=!sel; }
+    else if(b&&b.step==='birds'){ const hab=p.groups[b.group].habs[b.hab];
+      legal=G.birdLegal(k,hab.ls); dim=!legal; sel=b.picks.indexOf(i)>=0; }
+    return birdCard(k,{id:'hb'+i,clk:needBird&&(legal||sel), legal:legal&&!sel, sel:sel, dim:dim,
+      onclick:'UI.clickHand('+i+')'});
+  }).join('') || '<span class="hint">没有手牌</span>';
+  h+='</div>';
+  document.getElementById('mybody').innerHTML=h;
+}
+function renderOpps(){
+  const st=UI.state, me=meSeat();
+  document.getElementById('opps').innerHTML=st.players.map((p,i)=>{
+    if(i===me) return '';
+    const gs=p.groups.map((gr,gi)=>'群落'+(gi+1)+'：'
+      +gr.habs.map(hh=>lc(hh.ls).icon+hh.ls+(hh.guide?'★':'')+'['+hh.birds.map(k=>S[k]?S[k].cat.slice(0,1):'?').join('')+']').join(' ＋ ')
+    ).join('<br>') || '（还没有群落）';
+    return '<div class="opp"><div class="on">'+(p.isCPU?'🤖':'🧑')+' '+esc(st.names?st.names[i]:p.name)
+      +(i===st.cur?' ⬅ 行动中':'')+'</div>'
+      +'<div class="gsum">'+gs+'</div>'
+      +'<div class="gsum">手牌 '+p.hand.length+' 张 · 储备 '+p.reserve.length+' 张 · 未打出普通景观 '+p.plain.length+' 张</div>'
+      +'</div>';
+  }).join('') || '<span class="hint">—</span>';
+}
+function renderBar(){
+  const st=UI.state, p=myP(), b=UI.build;
+  const prompt=document.getElementById('prompt'), btns=document.getElementById('btns'), hint=document.getElementById('hint');
+  let pr='', bs='', hi='';
+  if(st.gameOver){ pr='对局结束'; btns.innerHTML='<button class="big" onclick="UI.openSetup()">再来一局</button>'; prompt.textContent=pr; hint.textContent=''; return; }
+  if(!myTurn()){
+    const cur=st.names?st.names[st.cur]:st.players[st.cur].name;
+    pr='⏳ 等待 '+esc(cur)+(st.phase==='observe'?' 观鸟…':' 行动…');
+    prompt.innerHTML=pr; btns.innerHTML=''; hint.textContent=''; return;
+  }
+  if(st.phase==='play'){
+    const s1=st._collected||!G.canCollect(st), s2=st._built||!G.canBuild(p);
+    pr='<span class="step '+(s1?'done':'now')+'">1 采集'+(s1?' ✔':'')+'</span>'
+      +'<span class="step '+(s1&&!s2?'now':(s2?'done':''))+'">2 构建'+(s2?' ✔':'')+'</span>'
+      +'<span class="step '+(s1&&s2?'now':'')+'">3 结束回合</span>';
+    if(UI.swap){
+      pr+='<br>采集 2 张：已选展示区 '+UI.swap.market.length+'/2，弃牌 '+(UI.swap.hand==null?'未选':'已选');
+      bs+='<button class="big" '+(UI.swap.market.length===2&&UI.swap.hand!=null?'':'disabled')+' onclick="UI.doSwap()">确定采集 2 张并弃 1 张</button>';
+      bs+='<button class="ghost" onclick="UI.toggleSwap()">取消</button>';
+    } else if(b&&b.step==='bird'){
+      const ls=b.src.plain||p.reserve[b.src.reserve].ls;
+      pr+='<br>已选景观【'+ls+'】—— 请从手牌里选 1 只能住进去的鸟';
+      bs+='<button class="ghost" onclick="UI.cancelBuild()">取消</button>';
+    } else if(b&&b.step==='target'){
+      pr+='<br>放在哪里？点「＋ 开一个新群落」，或点某个群落的「＋ 建在这里」当第 2 个栖息地';
+      bs+='<button class="ghost" onclick="UI.cancelBuild()">取消</button>';
+    } else if(b&&b.step==='birds'){
+      const hab=p.groups[b.group].habs[b.hab];
+      pr+='<br>往群落'+(b.group+1)+'的【'+hab.ls+'】放鸟：已选 '+b.picks.length+' 只（一次可放 1–2 只）';
+      bs+='<button class="big" '+(b.picks.length?'':'disabled')+' onclick="UI.doPlaceBirds()">确定放入</button>';
+      bs+='<button class="ghost" onclick="UI.cancelBuild()">取消</button>';
+    } else {
+      if(!s1) bs+='<button class="ghost" onclick="UI.toggleSwap()">采集 2 张（弃 1 张）</button>';
+      bs+='<button class="big gold" '+(s1&&s2?'':'disabled')+' onclick="UI.endTurn()">结束回合 ▶</button>';
+      hi = (!s1?'点展示区的鸟＝采集 1 张。':'')
+         + (!s2?'构建：点你的景观卡（普通或储备图鉴）→ 选鸟 → 选放哪个群落；或点群落里的空位补鸟。':'');
+    }
+  } else {
+    // 观鸟阶段
+    const opts=G.observableOptions(st,p);
+    if(st.obTaken){
+      pr='🔭 本轮已拿到图鉴。';
+    } else if(opts.length){
+      pr='🔭 观鸟：你有 '+opts.length+' 个「群落 × 图鉴」组合可拿 —— 点上方绿框的图鉴即可'
+        + (p.groups.length>1?'（多个群落都满足时，先点群落再点图鉴）':'');
+    } else {
+      pr='🔭 观鸟：目前没有任何群落满足图鉴条件，只能过。';
+    }
+    const sc=G.currentScore(st,meSeat());
+    if(sc>=G.WIN_SCORE) bs+='<button class="big gold" onclick="UI.obFinish(true)">宣布终局（'+sc+' 分）★</button>';
+    bs+='<button class="big" onclick="UI.obFinish(false)">结束观鸟 ▶</button>';
+    hi='观鸟拿卡后，由你选择保留名额对应的鸟：第 1 个栖息地可留原位或回手牌，第 2 个必须回手牌；其余归还。';
+  }
+  prompt.innerHTML=pr; btns.innerHTML=bs;
+  if(hint.style.color==='') hint.textContent=hi;
+  else hint.dataset.pending=hi;
+}
+function renderLog(){
+  const el=document.getElementById('log'), st=UI.state;
+  el.innerHTML=(st.log||[]).slice(-40).map(l=>'<div>'+esc(l)+'</div>').join('');
+  el.scrollTop=el.scrollHeight;
+}
+function renderGameOver(){
+  BGM.sfx('win');
+  const st=UI.state;
+  const rank=st.ranking||[];
+  document.getElementById('overlay').innerHTML='<div class="overlay"><div class="modal"><h2>🏁 对局结束</h2>'
+    +rank.map((r,i)=>'<div class="winrow'+(i===0?' first':'')+'"><span>'+(i===0?'🏆 ':'')+(i+1)+'. '+esc(r.name)+'</span>'
+      +'<span>'+r.score+' 分　<span class="hint">图鉴 '+r.guides+' ＋ 成就 '+r.ach+' − 储备 '+r.reserve+'</span></span></div>').join('')
+    +'<p class="hint">分数 = 打出的图鉴景观分 ＋ 成就分 − 储备区未打出的图鉴张数。</p>'
+    +'<div style="text-align:right;margin-top:10px">'
+      +'<button class="ghost" onclick="Songjiang.home()">回到封面</button> '
+      +'<button class="big" onclick="UI.openSetup()">再来一局</button></div></div></div>';
+}
+UI.openRules=function(){
+  document.getElementById('overlay').innerHTML='<div class="overlay"><div class="modal"><h2>牌桌规则 · 图鉴景观版</h2>'
+    +'<div class="rules">'
+    +'<h3>怎么赢</h3>总分先到 <b>15 分</b>的人可以在观鸟阶段宣布终局，本轮观鸟走完后结算。'
+      +'分数 = 打出的图鉴景观分（①2 分 / ②4 分）＋ 成就分 − 储备区里没打出的图鉴（每张 −1）。'
+    +'<h3>鸟类群落</h3>一个<b>栖息地</b> = 1 张景观卡 + 至少 1 只鸟（最多 '+G.SEG_CAP+' 只）。'
+      +'一个<b>鸟类群落</b>最多 '+G.HAB_CAP+' 个栖息地。你可以同时经营好几个群落。'
+      +'群落内从左往右建：先把左边那个建起来（有鸟）才能开右边；一旦开了右边，就不能再往左边放鸟，'
+      +'直到你对这个群落观鸟。'
+    +'<h3>每回合</h3>① <b>采集</b>：从展示区拿 1 张鸟；或拿 2 张再从手牌弃 1 张。<br>'
+      +'② <b>构建</b>（二选一）：打出 1 张景观 + 1 只鸟（新建群落，或当某群落的第 2 个栖息地）；'
+      +'或往已有栖息地放 1–2 只鸟。<br>③ 结束回合。'
+    +'<h3>观鸟阶段</h3>全员行动完毕后，每人依次观鸟一次。检视你的<b>某一个</b>鸟类群落，'
+      +'若它满足某张图鉴的条件，就把那张图鉴拿到储备区，然后<b>归还这个群落的鸟</b>——'
+      +'按「刚拿的图鉴 ＋ 你<b>所有已打出</b>的图鉴景观（不限这个群落）」各获得 1 个指定禽类保留名额，其余送回弃牌堆。'
+      +'第 1 个栖息地的保留鸟由玩家选择留在原位或收回手牌；第 2 个必须收回手牌。<b>其它群落不受影响。</b>'
+    +'<h3>图鉴</h3>24 张全部卡面向上平铺，谁都看得见。条件看的是<b>整个鸟类群落</b>，'
+      +'不限于这张图鉴自己印的那个景观。'
+    +'<h3>成就</h3>8 张，按你<b>已打出</b>的景观种类算（储备区的不算），每人全局限拿 1 张；成就1–4为2分，成就5–8为4分。'
+    +'</div>'
+    +'<div class="note" style="margin-top:12px"><b>电子版必要裁定：</b>作者原文未明确的部分暂按以下口径运行：'
+      +'每个栖息地最多 3 只鸟；图鉴条件按同一鸟类群落合计；15 分宣布后走完本轮观鸟；'
+      +'15 分门槛暂不扣储备区负分。另有防死锁兜底：鸟类牌池全空且连续两轮无人成功观鸟时，按当前分结束。'
+      +'这些都等待作者最终确认。</div>'
+    +'<div style="text-align:right;margin-top:10px"><button class="big" onclick="clearOverlay()">知道了</button></div>'
+    +'</div></div>';
+};
+
+window.addEventListener('DOMContentLoaded', UI.boot);
+</script>
+<script>
+/* Sources and art direction for the Songjiang edition. Species keys match the game engine. */
+const SongjiangData = (() => {
+  const sources = {
+    birds:['辰山冬季鸟类记录（2023）','https://lhsr.sh.gov.cn/shhx/20231220/17c216ff9d40484482d41aeeead67180.html'],
+    garden:['上海辰山国家植物园设立批复','https://www.forestry.gov.cn/lyj/1/szxx/20260702/679127.html'],
+    wetland:['松江泖港鸟类野生动物重要栖息地','https://www.songjiang.gov.cn/xwzx/001004/001004002/20260309/05bacbb7-1eb4-4d96-a547-96be0adaac06.html'],
+    lake:['广富林文化展示馆与富林湖','https://www.songjiang.gov.cn/ztzl/005019/005019001/20230111/694a7c71-4cec-4030-b7c6-3e3aaa14cd8f.html'],
+    sky:['中国科学院上海天文台历史沿革','https://shao.cas.cn/2020Ver/gkjj/lsyg/'],
+    quarry:['辰山矿坑花园的采石场修复','https://lhsr.sh.gov.cn/ywdt/20250328/1c41eba3-914f-48dc-b078-78047a4b08c6.html'],
+    forest:['松江区生态文明建设规划','https://www.songjiang.gov.cn/shsj_main/0392a8cd-3c6b-454c-a3b2-a850587d04c6/7dcf35d1-36de-4a7d-85df-67ac61124019/%E4%B8%8A%E6%B5%B7%E5%B8%82%E6%9D%BE%E6%B1%9F%E5%8C%BA%E4%BA%BA%E6%B0%91%E6%94%BF%E5%BA%9C%E5%85%B3%E4%BA%8E%E5%8D%B0%E5%8F%91%E3%80%8A%E4%B8%8A%E6%B5%B7%E5%B8%82%E6%9D%BE%E6%B1%9F%E5%8C%BA%E5%9B%BD%E5%AE%B6%E7%94%9F%E6%80%81%E6%96%87%E6%98%8E%E5%BB%BA%E8%AE%BE%E7%A4%BA%E8%8C%83%E5%8C%BA%E8%A7%84%E5%88%92%EF%BC%882024%EF%BD%9E2035%E5%B9%B4%EF%BC%89%E3%80%8B%E7%9A%84%E9%80%9A%E7%9F%A5.pdf']
+  };
+  const places = {
+    '湿地':{short:'泖田湿地', name:'泖田风情湿地', note:'泖港的重要鸟类栖息地包含水面和林地。湿地牌借取这片水陆交错的景象。', source:'wetland'},
+    '树冠':{short:'佘山林冠', name:'佘山林冠', note:'把佘山森林公园的层层树冠画进牌桌。出牌时，看鸟卡上的树冠标记。', source:'forest'},
+    '湖泊':{short:'富林湖', name:'广富林 · 富林湖', note:'湖上露出斜坡屋顶，水面下是广富林文化展示馆。湖泊牌取的是这里的轮廓。', source:'lake'},
+    '草地':{short:'辰山草坪', name:'辰山草坪', note:'辰山的冬季观察中，戴胜会在草地探食。辨鸟看现场线索，安置鸟卡按牌面景观。', source:'birds'},
+    '沙地':{short:'辰山矿坑', name:'辰山矿坑花园', note:'老采石场修复成了花园。沙地牌借用裸露岩壁的色泽，现场地貌为矿坑岩壁。', source:'quarry'},
+    '天空':{short:'佘山天际', name:'佘山观象台上空', note:'佘山山顶建有带圆顶的天文台。天空牌取自山顶开阔的视野。', source:'sky'}
+  };
+  const birds = {
+    yelu:'山阳桥旁的岸树上，冬日可以看见夜鹭歇脚。成鸟红眼，常把脖子缩在肩间。',
+    daisheng:'戴胜在辰山草坪上把细长的弯嘴探进土里。收拢的羽冠张开时像一把扇子。',
+    cuiniao:'普通翠鸟会在岸边的树桩或石头上静候，随后掠向水面。飞起时看它明亮的蓝背。',
+    wudong:'乌鸫的嘴和眼圈透着橘黄。辰山的冬季鸟类记录里，还记下了它善于模仿的鸣声。',
+    banjiu:'珠颈斑鸠颈侧的深色羽毛上布着浅色小点。看清这圈斑纹，就有了辨认它的线索。'
+  };
+  const tips = {
+    bailu:'牌桌上的黄嘴白鹭属于涉禽，可落在湿地或天空。辰山资料中的「白鹭」另属一种。',
+    shaji:'沙鸡在牌桌上属于陆禽。先看湖泊或沙地是否有空位，再决定要不要拿它。',
+    shuiju:'湿地和草地都能安置红尾水鸲。要拿鸣禽图鉴时，记得数整个群落。',
+    hongsun:'红隼提供一个猛禽名额。若天空和草地都能放，先看哪个群落离图鉴更近。',
+    maoying:'雕鸮属于猛禽，可在湖泊或沙地牌上落位；图鉴上的禽类要求按整个群落计算。',
+    lvtouya:'绿头鸭属于游禽。手里的湖泊或天空都能让它入场，打在哪里会影响接下来那张图鉴。',
+    tiane:'小天鹅是游禽，牌面景观为湿地与沙地。一张湿地就能连接不同禽类。',
+    yuange:'原鸽是扩展陆禽，在草地或湿地出牌。需要陆禽时留意展示区。',
+    zhuhuan:'朱鹮是扩展涉禽，可放在湿地或湖泊。拿图鉴前对照卡上的保留名额。',
+    huangli:'黄鹂是扩展鸣禽，牌面上有树冠和天空两种去处。',
+    tihu:'白鹈鹕提供游禽名额，能落在湖泊或草地，与想收的图鉴搭配。',
+    yingwu:'花头鹦鹉属于扩展攀禽，树冠和沙地都可用来安置它。',
+    bolao:'本牌组将伯劳归在猛禽栏，以天空或树冠出牌。这个类别用于桌游结算。'
+  };
+  const personas = {
+    rush:{name:'大学城摄影社 · 小禾',short:'小禾',style:'随拍',line:'先收够条件的小图鉴，下一轮再找新鸟。'},
+    tall:{name:'佘山巡林人 · 林叔',short:'林叔',style:'守候',line:'让群落再多留一只鸟，等高阶图鉴的机会。'},
+    achfirst:{name:'辰山导赏员 · 阿岑',short:'阿岑',style:'集章',line:'出牌时顺手凑已打出的景观，争取领到印章。'},
+    wide:{name:'泖田志愿者 · 小汀',short:'小汀',style:'多群落',line:'几处群落分开建设，下一次观鸟能多一处选择。'},
+    balance:{name:'云间鸟友 · 阿衡',short:'阿衡',style:'均衡',line:'在眼前能收的图鉴和下一回合的落点之间作取舍。'}
+  };
+  const stamps = ['','辰山草信','九峰听松','富林水墨','林湖相望','石壁回声','泖田惊鹭','云间五景','佘山望远'];
+  const route = [
+    {name:'山阳桥',land:'树冠', bird:'yelu', choices:['banjiu','yelu','cuiniao'], clue:'岸树上缩着一只短脖子的鸟。黑顶、灰翅，眼睛红红的。请从卡片里认出它。', hint:'看成鸟的黑顶和红眼。珠颈斑鸠的识别点在颈侧，普通翠鸟的背部是蓝色。'},
+    {name:'辰山草坪',land:'树冠',bird:'daisheng',choices:['daisheng','wudong','banjiu'], clue:'一只鸟沿着草坪走，弯长的嘴一下一下探进土里。抬头时，它展开扇子似的羽冠。',hint:'试着找头顶的长羽冠。乌鸫有橘色眼圈，珠颈斑鸠有颈斑。'},
+    {name:'辰山水岸',land:'湖泊',bird:'cuiniao',choices:['wudong','yelu','cuiniao'],clue:'水边石头上停着一抹亮蓝。它盯住水面，忽然扎下去，又回到岸边。',hint:'寻找蓝背、身形小而紧凑的那只。'}
+  ];
+  return {sources, places, birds, tips, personas, stamps, route};
+})();
+
+</script>
+<script>
+/* Local field journal, guided route and competition table. No remote data is needed to play. */
+const Songjiang = (() => {
+  'use strict';
+  const D = SongjiangData;
+  const screen = document.getElementById('sj-screen');
+  const marksKey = 'birding-songjiang.marks.v1';
+  let view = 'home';
+  let journalReturn = 'home';
+  let journalTab = 'birds';
+  let trip = null;
+  const species = Object.assign({}, G.SPECIES, Object.fromEntries(G.PACKS.stretch.map(b => [b.key, b])));
+
+  function place(land) { return D.places[land]; }
+  function persona(key) { return D.personas[key] || D.personas.balance; }
+  function stamp(id) { return D.stamps[id]; }
+  function birdNote(key) { return D.birds[key] || D.tips[key] || ''; }
+  function action(key, label, css = 'sj-primary', value = '') {
+    return `<button type="button" class="${css}" data-action="${key}" data-value="${esc(value)}">${label}</button>`;
+  }
+  function cite(key) {
+    const [title, url] = D.sources[key];
+    return `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a>`;
+  }
+  function soundLabel() {
+    return {full:'♫ 富林晨曲', nature:'♪ 水岸鸟鸣', off:'声音已关'}[BGM.getMode()];
+  }
+  function header() {
+    return `<header class="sj-head">
+      <button type="button" class="sj-brand" data-action="home"><span class="sj-brand-mark" aria-hidden="true">云</span>观鸟俱乐部</button>
+      <nav class="sj-nav" aria-label="游戏导航">${action('journal','观鸟手册','sj-back')}${action('sound',soundLabel(),'sj-back sj-sound')}</nav>
+    </header>`;
+  }
+  function footer() {
+    return '<footer class="sj-foot"><span>桌游设计与原作插画　海兔　／　数字版　Ethan8</span><details><summary>松江印象 · 制作与资料</summary><p>此网页特别版沿用图鉴景观 v6 规则。原项目使用过 Claude。Gemini 辅助制作网页鸟牌插画与程序音景，OpenAI Codex 辅助制作松江风景插画、挑战、界面、文字和验证。电脑对手在本地按规则出牌。</p><p>自然观察资料列在观鸟手册中。原作数字版可在 <a href="https://birdingclub-online.try-board-game.uk/" target="_blank" rel="noopener noreferrer">Dora 版《观鸟俱乐部》</a> 游玩。</p></details></footer>';
+  }
+  function paint(next, markup, scroll = true) {
+    view = next;
+    document.body.dataset.sjView = next;
+    screen.hidden = false;
+    screen.innerHTML = header() + markup + footer();
+    if (scroll) window.scrollTo(0,0);
+  }
+  function scene() {
+    return '<figure class="sj-art"><svg viewBox="0 0 680 380" role="img" aria-label="原创插画，夜鹭立于水边，远处可见佘山观象台圆顶和广富林的屋顶"><use href="#sj-riverscape"/></svg><figcaption><b>夜鹭　Nycticorax nycticorax</b><span>松江风景合绘 · 示意插画</span></figcaption></figure>';
+  }
+  function getMarks() {
+    try {
+      const v = JSON.parse(localStorage.getItem(marksKey) || '{}');
+      return v && typeof v === 'object' ? v : {};
+    } catch { return {}; }
+  }
+  function keepMark(id) {
+    try { localStorage.setItem(marksKey, JSON.stringify({...getMarks(), [id]:true})); } catch { /* Offline play also works without storage. */ }
+  }
+  function home() {
+    clearOverlay();
+    const marks = getMarks();
+    const earned = Number(!!marks.A12) + Number(!!marks.B2);
+    const list = Object.entries(D.places).map(([land,p]) => `<li><small>${land}</small><b>${p.short}</b></li>`).join('');
+    const resume = UI.state && !UI.state.gameOver ? action('board','继续牌局','sj-secondary') : '';
+    const routeLabel = trip && trip.phase !== 'result' ? '继续辰山寻鸟 →' : '开始辰山寻鸟 →';
+    paint('home', `<section class="sj-hero"><div class="sj-hero-copy">
+      <p class="sj-eye">上海松江 · 冬季观鸟</p><h1>观鸟俱乐部<span>松江印象</span></h1>
+      <p class="sj-deck">山阳桥的岸树上歇着谁？沿着鸟影走到水边，决定现在收图鉴，还是再等一只鸟。</p>
+      <div class="sj-actions">${action('route',routeLabel)}${action('setup','自由牌局','sj-secondary')}${resume}</div>
+      </div>${scene()}</section>
+      <section class="sj-section"><div class="sj-section-head"><h2>牌桌上的松江</h2><span>六种景观　·　路线纪念章 ${earned} / 2</span></div>
+      <ul class="sj-places">${list}</ul></section>`);
+  }
+
+  function newTrip() {
+    const state = G.newGame({names:['你','同行鸟友'],cpu:[false,true],seed:20261123});
+    // A teaching position with just the observer's one group. Preserve the bird
+    // supply when moving a card in or out so settlement uses the real engine.
+    for (const p of state.players) p.hand.length = 0;
+    state.deck = G.buildDeck(null);
+    state.players[0].groups = [{habs:[],fillFrom:0}];
+    return {state,step:0,phase:'identify',found:[],guide:null,receipt:null};
+  }
+  function routebar() {
+    return '<ol class="sj-routebar" aria-label="观鸟路线">' + D.route.map((r,i) => {
+      const current = i===trip.step && trip.phase!=='result' ? ' aria-current="step"' : '';
+      const done = trip.found.includes(r.bird) ? ' class="sj-done"' : '';
+      return `<li${current}${done}>${i+1} · ${r.name}</li>`;
+    }).join('') + '</ol>';
+  }
+  function pickCard(key) {
+    const sp=species[key];
+    return `<button type="button" class="sj-pick" data-action="identify" data-value="${key}">
+      ${birdArt(key,sp.cat)}<strong>${sp.name}</strong><small>${sp.cat}</small></button>`;
+  }
+  function fieldSpecimen(key) {
+    return `<div class="sj-find"><div>${birdArt(key,species[key].cat)}</div><div>
+      <h2>${species[key].name}</h2><p>${D.birds[key]}</p></div></div>`;
+  }
+  function tripBody() {
+    const r=D.route[trip.step];
+    if (trip.phase==='identify') return `<h1>${r.name}寻鸟</h1><p class="sj-question">${r.clue}</p><div class="sj-cards">${r.choices.map(pickCard).join('')}</div><p class="sj-feedback" id="sj-feedback" aria-live="polite"></p>`;
+    if (trip.phase==='place') {
+      const instruction = {yelu:'用树冠牌开一个群落。夜鹭在牌桌上提供一个涉禽名额。',daisheng:'刚才是在草地辨认它。现在翻看牌面，戴胜可住树冠或湿地；把它接到夜鹭所在的树冠，两只鸟就能合交一张图鉴。',cuiniao:'给同一群落增加第二个栖息地「湖泊」，把普通翠鸟放入。它与树冠里的戴胜合计两只攀禽。'}[r.bird];
+      return `<h1>认出来了</h1><div class="sj-stop">${fieldSpecimen(r.bird)}<p>${instruction}</p></div>${action('placeBird','放入'+r.land+'景观 →')}`;
+    }
+    if (trip.phase==='choice') {
+      const late = trip.step===2;
+      const owned = trip.found.map(key => `<span>${species[key].name} · ${species[key].cat}</span>`).join('');
+      return `<h1>${late?'收下水岸图鉴':'现在收，还是再等一只？'}</h1><div class="sj-ribbon">${owned}</div>
+        <div class="sj-stop"><h2>${late?'两只攀禽，一只涉禽':'一只攀禽，一只涉禽'}</h2>
+        <p>${late?'两处栖息地在同一个群落里，可以合算。四分图鉴还给你一个保留涉禽的名额。':'两只鸟已经能交两分图鉴。若再走到水边找到普通翠鸟，就能试收四分图鉴。'}</p></div>
+        <div class="sj-actions">${late?action('collectGuide','收四分图鉴','sj-primary','B2'):action('walk','再走一站 · 水岸 →')+action('collectGuide','现在收两分图鉴','sj-secondary','A12')}</div>`;
+    }
+    const g=trip.guide, result=trip.receipt, long=g.id==='B2';
+    return `<h1>这一趟的观鸟手记</h1><div class="sj-stop sj-result"><span class="sj-seal">${long?'水岸<br>守候':'桥边<br>初见'}</span><div>
+      <h2>${long?'水岸守候':'桥边初见'}</h2><p>认出 ${trip.found.length} 种鸟，收入一张面值 <strong>${g.pts} 分</strong>的树冠图鉴。</p>
+      <p>${result.returned} 只鸟飞离群落。${long?'四分图鉴的涉禽名额让夜鹭留在原树冠。':'这张图鉴保留陆禽，两位主角都飞走了。'}</p></div></div>
+      <p class="sj-deck">在自由牌局里，收进储备区只是第一步。之后把图鉴当景观打出，才计入图鉴分。</p>
+      <div class="sj-actions">${action('setup','进入自由牌局 →')}${action('again','重走这条路线','sj-secondary')}${action('home','回到封面','sj-back')}</div>`;
+  }
+  function route() {
+    if (!trip) trip=newTrip();
+    paint('route', `<article class="sj-page"><p class="sj-eye">辰山冬日寻鸟</p>${routebar()}${tripBody()}
+      <p class="sj-cite">实地线索来自${cite('birds')}。路线中的牌局由游戏规则结算。</p></article>`);
+  }
+  function identify(key) {
+    if (view!=='route' || trip.phase!=='identify') return;
+    const r=D.route[trip.step];
+    if(key!==r.bird){ document.getElementById('sj-feedback').textContent=r.hint; return; }
+    trip.phase='place';
+    BGM.sfx('collect');
+    route();
+  }
+  function placeBird() {
+    if (trip.phase!=='place') return;
+    const r=D.route[trip.step], state=trip.state, group=state.players[0].groups[0];
+    const index=state.deck.indexOf(r.bird);
+    if(index<0 || !G.birdLegal(r.bird,r.land)) throw new Error('Invalid field route');
+    let habitat=group.habs.find(h=>h.ls===r.land);
+    if(!habitat){ habitat={ls:r.land,guide:null,birds:[]}; group.habs.push(habitat); }
+    habitat.birds.push(state.deck.splice(index,1)[0]);
+    trip.found.push(r.bird);
+    if(trip.step===0){ trip.step++; trip.phase='identify'; } else trip.phase='choice';
+    BGM.sfx('build');
+    route();
+  }
+  function collectGuide(id) {
+    if (trip.phase!=='choice' || id!==(trip.step===2?'B2':'A12')) return;
+    const g=G.GUIDE_BY_ID[id], state=trip.state;
+    const pool=g.lvl===1?state.pool1:state.pool2;
+    state.phase='observe';
+    const result=G.obTake(state,0,g.lvl,pool.findIndex(x=>x.id===id));
+    if(!result.ok) throw new Error(result.err);
+    trip.guide=g; trip.receipt=result; trip.phase='result';
+    keepMark(id);
+    BGM.sfx('observe');
+    route();
+  }
+
+  function entry(key) {
+    const sp=species[key];
+    return `<article class="sj-entry"><h3>${birdArt(key,sp.cat)}${sp.name}</h3><p>${birdNote(key)}</p>
+      <p class="sj-meta">牌面　${sp.cat} · ${sp.hab.join(' / ')}</p></article>`;
+  }
+  function journal(tab) {
+    if(view!=='journal') { journalReturn=view; journalTab='birds'; }
+    if(tab) journalTab=tab;
+    const tabs=[['birds','鸟类手册'],['sites','六处景观'],['stamps','云间印章']];
+    let content='';
+    if(journalTab==='birds') {
+      const local=Object.keys(D.birds);
+      const others=Object.keys(species).filter(k=>!D.birds[k]);
+      content=`<div class="sj-section-head"><h2>辰山有记录的五种鸟</h2></div><div class="sj-library">${local.map(entry).join('')}</div>
+        <p class="sj-cite">观察记述依据${cite('birds')}。</p>
+        <details class="sj-stop"><summary>其余 ${others.length} 种鸟的出牌手记</summary><p>这些条目介绍牌面用途，点击卡牌时请按牌面景观安置。</p><div class="sj-library">${others.map(entry).join('')}</div></details>`;
+    } else if(journalTab==='sites') {
+      content='<div class="sj-sites-list">'+Object.entries(D.places).map(([l,p])=>`<article class="sj-entry"><h3>${p.name}</h3><p>${l}牌 · ${p.note}</p><p class="sj-cite">${cite(p.source)}</p></article>`).join('')+'</div>';
+    } else {
+      content='<p class="sj-deck">按自己已打出的景观领印，每人一局限领一枚。对照下面的景观组合规划下一手。</p><div class="sj-sites-list">'+G.ACH.map(a=>`<article class="sj-entry"><h3>${stamp(a.id)} · ${a.pts} 分</h3><p>${Object.entries(a.req).map(([l,n])=>l+' × '+n).join('　')}</p></article>`).join('')+'</div>';
+    }
+    paint('journal',`<article class="sj-page">${action('return','← 返回','sj-back')}<h1>松江观鸟手册</h1>
+      <nav class="sj-tabs" aria-label="手册分类">${tabs.map(([k,t])=>action('journalTab',t,k===journalTab?'sj-primary':'sj-secondary',k)).join('')}</nav>${content}</article>`);
+  }
+  function returnToPage() {
+    if(journalReturn==='route') return route();
+    if(journalReturn==='setup') return setup();
+    if(journalReturn==='board' && UI.state) return enterBoard();
+    home();
+  }
+
+  function setup() {
+    const options=(active)=>G.STYLE_ORDER.map(k=>`<option value="${k}" ${k===active?'selected':''}>${persona(k).name}（${persona(k).style}）</option>`).join('');
+    const rows=['rush','tall','wide'].map((k,i)=>`<div class="sj-choice-row" id="sj-seat-${i+1}"><label for="s${i+1}">鸟友 ${i+1}</label><select id="s${i+1}">${options(k)}</select><input type="hidden" id="k${i+1}" value="${i===0?'cpu':'none'}"></div>`).join('');
+    paint('setup',`<article class="sj-page sj-setup">${action('home','← 返回封面','sj-back')}<h1>自由牌局</h1><p class="sj-deck">和松江鸟友共用一桌图鉴。每回合先采鸟，再建群落，凑齐卡上的禽类组合就能观鸟。</p>
+      <div class="sj-stop"><div class="sj-choice-row"><label for="sj-count">同桌人数</label><select id="sj-count"><option value="2">2 人 · 你和一位鸟友</option><option value="3">3 人 · 两位鸟友</option><option value="4">4 人 · 三位鸟友</option></select></div>
+      ${rows}<label class="sj-check"><input id="stretch" type="checkbox" checked>加入六种扩展鸟牌</label>
+      ${action('start',UI.state&&!UI.state.gameOver?'开始新牌局 →':'开始牌局 →')}</div><p class="sj-meta">五位鸟友都是游戏角色，各有偏好的打法。</p></article>`);
+    seatCount();
+  }
+  function seatCount() {
+    const n=Number(document.getElementById('sj-count').value);
+    for(let i=1;i<=3;i++){
+      document.getElementById('k'+i).value=i<n?'cpu':'none';
+      document.getElementById('sj-seat-'+i).hidden=i>=n;
+    }
+  }
+  function enterBoard() {
+    view='board'; document.body.dataset.sjView='board'; screen.hidden=true; clearOverlay(); window.scrollTo(0,0);
+  }
+  function beforeTurn(st,actor) {
+    return {guides:st.pool1.length+st.pool2.length, sites:G.allHabs(actor).length, ach:actor.ach, phase:st.phase};
+  }
+  function comment(st,actor,prev) {
+    const el=document.getElementById('sj-comment');
+    const role=persona(actor.style);
+    let event='';
+    if(actor.ach!==prev.ach && actor.ach!=null) event='领到了「'+stamp(actor.ach)+'」印章。';
+    else if(st.pool1.length+st.pool2.length<prev.guides && actor.reserve.length){
+      const g=actor.reserve[actor.reserve.length-1]; event='收走了'+g.pts+'分的'+g.ls+'图鉴。';
+    } else if(G.allHabs(actor).length>prev.sites) event='在桌上添了一张景观。';
+    else if(prev.phase==='observe') event='结束了这一轮观鸟。';
+    else event='完成了这次采集与构建。';
+    el.hidden=false; el.textContent=role.short+event+'　鸟友习惯：'+role.line;
+  }
+
+  screen.addEventListener('click',e=>{
+    const b=e.target.closest('button[data-action]'); if(!b) return;
+    const v=b.dataset.value;
+    switch(b.dataset.action){
+      case 'home': home(); break;
+      case 'journal': journal(); break;
+      case 'journalTab': journal(v); break;
+      case 'return': returnToPage(); break;
+      case 'sound': BGM.toggle(); b.textContent=soundLabel(); break;
+      case 'setup': setup(); break;
+      case 'start': document.getElementById('sj-comment').hidden=true; UI.startLocal(); break;
+      case 'board': enterBoard(); break;
+      case 'route': if(!trip||trip.phase==='result') trip=newTrip(); route(); break;
+      case 'again': trip=newTrip(); route(); break;
+      case 'identify': identify(v); break;
+      case 'placeBird': placeBird(); break;
+      case 'walk': if(trip.phase==='choice' && trip.step===1){ trip.step=2; trip.phase='identify'; route(); } break;
+      case 'collectGuide': collectGuide(v); break;
+    }
+  });
+  screen.addEventListener('change',e=>{ if(e.target.id==='sj-count') seatCount(); });
+  return {home,setup,journal,place,persona,stamp,birdNote,enterBoard,beforeTurn,comment};
+})();
+
+
+</script>
+</body>
+</html>
